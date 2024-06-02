@@ -4,10 +4,12 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class S04T02N01MichelApplication {
+public class Application {
 
 	public static void main(String[] args) {
-		SpringApplication.run(S04T02N01MichelApplication.class, args);
+		SpringApplication.run(Application.class, args);
 	}
+
+	// Consola en http://localhost:8080/h2-console
 
 }
