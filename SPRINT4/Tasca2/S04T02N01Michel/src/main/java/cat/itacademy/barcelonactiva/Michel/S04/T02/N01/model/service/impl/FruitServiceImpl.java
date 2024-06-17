@@ -88,10 +88,4 @@ public class FruitServiceImpl implements FruitService {
     public List<Fruit> getAllFruit() {
         return fruitRepository.findAll();
     }
-
-    /* El Service contiene la lógica de negocio, los métodos de servicios. Es una capa intermedia
-     * entre el Controller y el Repository: encapsula la lógica de negocio (Service) y la separa
-     * de la lógica de presentación (Controller) y la lógica de acceso a datos (Repository).
-     * Puede contener métodos que no estén directamente relacionados con operaciones CRUD, pero
-     * que son necesarios para la lógica de negocio de la apliación. */
 }
