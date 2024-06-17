@@ -50,9 +50,4 @@ public class FruitController {
     public ResponseEntity<List<Fruit>> getAllFruit(){
         return ResponseEntity.ok(fruitService.getAllFruit());
     }
-
-    /* El Controller maneja solicitudes HTTP relaciondas con Fruit y gestiona la interacción entre el cliente y
-     * la lógica de negocio, delegando la responsabilidad al Service. Interpreta los datos del cliente, invoca
-     * los métodos correspondientes del Service y devuelve las respuestas al cliente. Es el punto de entrada
-     * a la aplicación desde el exterior, ya que recibe las solicitudes HTTP y las enruta donde corresponde */
 }
