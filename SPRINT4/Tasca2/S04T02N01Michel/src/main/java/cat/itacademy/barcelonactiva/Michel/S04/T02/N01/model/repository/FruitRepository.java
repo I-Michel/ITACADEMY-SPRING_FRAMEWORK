@@ -6,6 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface FruitRepository extends JpaRepository<Fruit, Integer> {
-
-    // El Repository maneja y contiene métodos/operaciones CRUD para Fruit que luego usaremos en Service.
+    
 }
