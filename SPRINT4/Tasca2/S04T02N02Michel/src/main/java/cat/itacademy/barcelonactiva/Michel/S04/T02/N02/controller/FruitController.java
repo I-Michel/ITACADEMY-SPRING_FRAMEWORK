@@ -1,7 +1,8 @@
-package cat.itacademy.barcelonactiva.Michel.S04.T02.N02.controllers;
+package cat.itacademy.barcelonactiva.Michel.S04.T02.N02.controller;
 
+import cat.itacademy.barcelonactiva.Michel.S04.T02.N02.exception.FruitNotFoundException;
 import cat.itacademy.barcelonactiva.Michel.S04.T02.N02.model.domain.Fruit;
-import cat.itacademy.barcelonactiva.Michel.S04.T02.N02.model.services.FruitService;
+import cat.itacademy.barcelonactiva.Michel.S04.T02.N02.model.service.impl.FruitServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +14,7 @@ import java.util.List;
 public class FruitController {
 
     @Autowired
-    private FruitService fruitService;
+    private FruitServiceImpl fruitService;
 
     // http://localhost:8080/fruita/add
     @PostMapping("/add")
@@ -24,14 +25,14 @@ public class FruitController {
 
     // http://localhost:8080/fruit/update
     @PutMapping("/update")
-    public ResponseEntity<Fruit> updateFruit(@RequestBody Fruit fruit) {
+    public ResponseEntity<Fruit> updateFruit(@RequestBody Fruit fruit) throws FruitNotFoundException {
         Fruit updatedFruit = fruitService.updateFruit(fruit);
         return ResponseEntity.ok(updatedFruit);
     }
 
     // http://localhost:8080/fruit/delete/{id}
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Fruit> deleteFruit(@PathVariable int id) {
+    public ResponseEntity<Fruit> deleteFruit(@PathVariable int id) throws FruitNotFoundException {
         Fruit deletedFruit = fruitService.deleteFruit(id);
         return ResponseEntity.ok(deletedFruit);
     }
@@ -39,7 +40,7 @@ public class FruitController {
 
     // http://localhost:8080/fruit/getOne/{id}
     @GetMapping("/getOne/{id}")
-    public ResponseEntity<Fruit> getOneFruit(@PathVariable int id) {
+    public ResponseEntity<Fruit> getOneFruit(@PathVariable int id) throws FruitNotFoundException {
         Fruit gettedFruit = fruitService.getOneFruit(id);
         return ResponseEntity.ok(gettedFruit);
     }

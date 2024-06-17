@@ -1,7 +1,9 @@
-package cat.itacademy.barcelonactiva.Michel.S04.T02.N01.model.services;
+package cat.itacademy.barcelonactiva.Michel.S04.T02.N01.model.service.impl;
 
+import cat.itacademy.barcelonactiva.Michel.S04.T02.N01.exception.FruitNotFoundException;
 import cat.itacademy.barcelonactiva.Michel.S04.T02.N01.model.domain.Fruit;
 import cat.itacademy.barcelonactiva.Michel.S04.T02.N01.model.repository.FruitRepository;
+import cat.itacademy.barcelonactiva.Michel.S04.T02.N01.model.service.FruitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
@@ -10,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class FruitService {
+public class FruitServiceImpl implements FruitService {
 
     @Autowired
     private FruitRepository fruitRepository;
@@ -25,21 +27,24 @@ public class FruitService {
         }
     }
 
-    public Optional<Fruit> getOptionalFruit(int id) {
-        return fruitRepository.findById(id);
+    public Optional<Fruit> getOptionalFruit(int id) throws FruitNotFoundException {
+        Optional<Fruit> optionalFruit = fruitRepository.findById(id);
+
+        if (optionalFruit.isEmpty()) {
+            throw new FruitNotFoundException("Fruit not found: ID " + id + ".");
+        }
+        return optionalFruit;
     }
 
-    public Fruit updateFruit(Fruit fruit) {
+    public Fruit updateFruit(Fruit fruit) throws FruitNotFoundException {
         Optional<Fruit> optionalFruit = getOptionalFruit(fruit.getId());
+
+        Fruit okFruit = optionalFruit.get();
+        okFruit.setName(fruit.getName());
+        okFruit.setKg(fruit.getKg());
+
         try {
-            if (optionalFruit.isPresent()) {
-                Fruit okFruit = optionalFruit.get();
-                okFruit.setName(fruit.getName());
-                okFruit.setKg(fruit.getKg());
-                return fruitRepository.save(okFruit);
-            } else {
-                throw new RuntimeException("Fruit not found: ID " + fruit.getId() + ".");
-            }
+            return fruitRepository.save(okFruit);
         } catch (DataAccessException e) {
             throw new RuntimeException("Error when updating fruit with ID " + fruit.getId() +
                     ": " + e.getMessage());
@@ -49,16 +54,13 @@ public class FruitService {
         }
     }
 
-    public Fruit deleteFruit(int id) {
+    public Fruit deleteFruit(int id) throws FruitNotFoundException {
         Optional<Fruit> optionalFruit = getOptionalFruit(id);
+        Fruit deletedFruit = optionalFruit.get();
+
         try {
-            if (optionalFruit.isPresent()) {
-                Fruit deletedFruit = optionalFruit.get();
-                fruitRepository.deleteById(id);
-                return deletedFruit;
-            } else {
-                throw new RuntimeException("Fruit not found: ID " + id + ".");
-            }
+            fruitRepository.deleteById(id);
+            return deletedFruit;
         } catch (DataAccessException e) {
             throw new RuntimeException("Error when deleting fruit with ID " + id +
                     ": " + e.getMessage());
@@ -68,14 +70,12 @@ public class FruitService {
         }
     }
 
-    public Fruit getOneFruit(int id) {
+    public Fruit getOneFruit(int id) throws FruitNotFoundException {
         Optional<Fruit> optionalFruit = getOptionalFruit(id);
+
         try {
-            if (optionalFruit.isPresent()) {
-                return optionalFruit.get();
-            } else {
-                throw new RuntimeException("Fruit not found: ID " + id + ".");
-            }
+            return optionalFruit.get();
+
         } catch (DataAccessException e) {
             throw new RuntimeException("Error when getting fruit with ID " + id +
                     ": " + e.getMessage());
