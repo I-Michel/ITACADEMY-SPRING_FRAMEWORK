@@ -6,7 +6,6 @@ import cat.itacademy.barcelonactiva.Michel.S04.T02.N03.model.repository.FruitRep
 import cat.itacademy.barcelonactiva.Michel.S04.T02.N03.model.service.FruitService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
@@ -17,74 +16,43 @@ public class FruitServiceImpl implements FruitService {
     @Autowired
     private FruitRepository fruitRepository;
 
+    @Override
     public Fruit addFruit(Fruit fruit) {
-        try {
-            return fruitRepository.save(fruit);
-        } catch (DataAccessException e) {
-            throw new RuntimeException("Error when adding fruit: " + e.getMessage());
-        } catch (Exception e) {
-            throw new RuntimeException("An error occurred while adding fruit: " + e.getMessage());
-        }
+        return fruitRepository.save(fruit);
     }
 
-    public Optional<Fruit> getOptionalFruit(ObjectId id) throws FruitNotFoundException {
-        Optional<Fruit> optionalFruit = fruitRepository.findById(id);
-
-        if (optionalFruit.isEmpty()) {
-            throw new FruitNotFoundException("Fruit not found: ID " + id + ".");
-        }
-        return optionalFruit;
+    @Override
+    public Optional<Fruit> getOptionalFruit(ObjectId id) {
+        return fruitRepository.findById(id);
     }
 
-    public Fruit updateFruit(Fruit fruit) throws FruitNotFoundException {
+    @Override
+    public Fruit updateFruit(Fruit fruit) {
         Optional<Fruit> optionalFruit = getOptionalFruit(fruit.getId());
+        Fruit okFruit = optionalFruit.orElseThrow(() -> new FruitNotFoundException("Fruit not found with id: " + fruit.getId()));
 
-        Fruit okFruit = optionalFruit.get();
         okFruit.setName(fruit.getName());
         okFruit.setKg(fruit.getKg());
 
-        try {
-            return fruitRepository.save(okFruit);
-        } catch (DataAccessException e) {
-            throw new RuntimeException("Error when updating fruit with ID " + fruit.getId() +
-                    ": " + e.getMessage());
-        } catch (Exception e) {
-            throw new RuntimeException("An error occurred while updating fruit with ID " +
-                    fruit.getId() + ": " + e.getMessage());
-        }
+        return fruitRepository.save(okFruit);
     }
 
-    public Fruit deleteFruit(ObjectId id) throws FruitNotFoundException {
+    @Override
+    public Fruit deleteFruit(ObjectId id) {
         Optional<Fruit> optionalFruit = getOptionalFruit(id);
-        Fruit deletedFruit = optionalFruit.get();
+        Fruit okFruit = optionalFruit.orElseThrow(() -> new FruitNotFoundException("Fruit not found with id: " + id));
 
-        try {
-            fruitRepository.deleteById(id);
-            return deletedFruit;
-        } catch (DataAccessException e) {
-            throw new RuntimeException("Error when deleting fruit with ID " + id +
-                    ": " + e.getMessage());
-        } catch (Exception e) {
-            throw new RuntimeException("An error occurred while deleting fruit with ID " +
-                    id + ": " + e.getMessage());
-        }
+        fruitRepository.deleteById(id);
+        return okFruit;
     }
 
-    public Fruit getOneFruit(ObjectId id) throws FruitNotFoundException {
+    @Override
+    public Fruit getOneFruit(ObjectId id) {
         Optional<Fruit> optionalFruit = getOptionalFruit(id);
-
-        try {
-            return optionalFruit.get();
-
-        } catch (DataAccessException e) {
-            throw new RuntimeException("Error when getting fruit with ID " + id +
-                    ": " + e.getMessage());
-        } catch (Exception e) {
-            throw new RuntimeException("An error occurred while getting fruit with ID " +
-                    id + ": " + e.getMessage());
-        }
+        return optionalFruit.orElseThrow(() -> new FruitNotFoundException("Fruit not found with id: " + id));
     }
 
+    @Override
     public List<Fruit> getAllFruit() {
         return fruitRepository.findAll();
     }
