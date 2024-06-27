@@ -4,10 +4,9 @@ import cat.itacademy.barcelonactiva.Michel.S05.T01.N01.model.dto.BranchDTO;
 import cat.itacademy.barcelonactiva.Michel.S05.T01.N01.model.service.impl.BranchServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/branch")
@@ -24,10 +23,29 @@ public class BranchController {
     }
 
     //http://localhost:9000/sucursal/update
+    @PutMapping("/update")
+    public ResponseEntity<BranchDTO> updateBranch(@RequestBody BranchDTO dto) {
+        BranchDTO updatedDto = branchService.updateBranch(dto);
+        return ResponseEntity.ok(updatedDto);
+    }
 
     //http://localhost:9000/sucursal/delete/{id}
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<BranchDTO> deleteBranch(@PathVariable int id) {
+        BranchDTO deletedDto = branchService.deleteBranch(id);
+        return ResponseEntity.ok(deletedDto);
+    }
 
     //http://localhost:9000/sucursal/getOne/{id}
+    @GetMapping("/getOne/{id}")
+    public ResponseEntity<BranchDTO> getOneBranch(@PathVariable int id) {
+        BranchDTO gottenDto = branchService.getOneBranch(id);
+        return ResponseEntity.ok(gottenDto);
+    }
 
     //http://localhost:9000/sucursal/getAll
+    @GetMapping("getAll")
+    public ResponseEntity<List<BranchDTO>> getAllBranches() {
+        return ResponseEntity.ok(branchService.getAllBranches());
+    }
 }

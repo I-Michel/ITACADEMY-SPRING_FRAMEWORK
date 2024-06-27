@@ -6,8 +6,8 @@ import cat.itacademy.barcelonactiva.Michel.S05.T01.N01.model.dto.BranchDTO;
 import cat.itacademy.barcelonactiva.Michel.S05.T01.N01.model.repository.BranchRepository;
 import cat.itacademy.barcelonactiva.Michel.S05.T01.N01.model.service.BranchService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -27,72 +27,39 @@ public class BranchServiceImpl implements BranchService {
 
     @Override
     public BranchDTO addBranch(BranchDTO dto) {
-        try {
-            return convertToDTO(branchRepository.save(convertToEntity(dto)));
-        } catch (DataAccessException e) {
-            throw new RuntimeException("Error when adding branch: " + e.getMessage());
-        } catch (Exception e) {
-            throw new RuntimeException("An error occurred while adding branch: " + e.getMessage());
-        }
+        return convertToDTO(branchRepository.save(convertToEntity(dto)));
     }
 
     @Override
-    public Optional<Branch> getOptionalBranch(int id) throws BranchNotFoundException {
-        Optional<Branch> optionalBranch = branchRepository.findById(id);
-
-        if (optionalBranch.isEmpty()) {
-            throw new BranchNotFoundException("Branch not found: ID " + id + ".");
-        }
-        return optionalBranch;
+    public Optional<Branch> getOptionalBranch(int id) {
+        return branchRepository.findById(id);
     }
 
     @Override
-    public BranchDTO updateBranch(BranchDTO dto) throws BranchNotFoundException {
+    public BranchDTO updateBranch(BranchDTO dto) {
         Optional<Branch> optionalBranch = getOptionalBranch(dto.getPk_branchID());
-        Branch okBranch = optionalBranch.get();
+        Branch okBranch = optionalBranch.orElseThrow(() -> new BranchNotFoundException("Branch not found with id: " + dto.getPk_branchID()));
+
         okBranch.setBranchName(dto.getBranchName());
         okBranch.setBranchCountry(dto.getBranchCountry());
 
-        try {
-            return convertToDTO(branchRepository.save(okBranch));
-        } catch (DataAccessException e) {
-            throw new RuntimeException("Error when updating branch with ID " + okBranch.getPk_branchID() +
-                    ": " + e.getMessage());
-        } catch (Exception e) {
-            throw new RuntimeException("An error occurred while updating branch with ID " +
-                    okBranch.getPk_branchID() + ": " + e.getMessage());
-        }
+        return convertToDTO(branchRepository.save(okBranch));
     }
 
     @Override
-    public BranchDTO deleteBranch(int id) throws BranchNotFoundException {
+    public BranchDTO deleteBranch(int id) {
         Optional<Branch> optionalBranch = getOptionalBranch(id);
+        Branch okBranch = optionalBranch.orElseThrow(() -> new BranchNotFoundException("Branch not found with id: " + id));
 
-        try {
-            branchRepository.deleteById(id);
-            return convertToDTO(optionalBranch.get());
-        } catch (DataAccessException e) {
-            throw new RuntimeException("Error when deleting branch with ID " + id +
-                    ": " + e.getMessage());
-        } catch (Exception e) {
-            throw new RuntimeException("An error occurred while deleting branch with ID " +
-                    id + ": " + e.getMessage());
-        }
+        branchRepository.deleteById(id);
+        return convertToDTO(okBranch);
     }
 
     @Override
-    public BranchDTO getOneFruit(int id) throws BranchNotFoundException {
+    public BranchDTO getOneBranch(int id) {
         Optional<Branch> optionalBranch = getOptionalBranch(id);
 
-        try {
-            return convertToDTO(optionalBranch.get());
-        } catch (DataAccessException e) {
-            throw new RuntimeException("Error when getting branch with ID " + id +
-                    ": " + e.getMessage());
-        } catch (Exception e) {
-            throw new RuntimeException("An error occurred while getting branch with ID " +
-                    id + ": " + e.getMessage());
-        }
+        return convertToDTO(optionalBranch.orElseThrow(() -> new BranchNotFoundException("Branch not found with id: " + id)));
     }
 
     @Override

@@ -41,8 +41,8 @@ public class FruitController {
     // http://localhost:8080/fruit/getOne/{id}
     @GetMapping("/getOne/{id}")
     public ResponseEntity<Fruit> getOneFruit(@PathVariable int id) throws FruitNotFoundException {
-        Fruit gettedFruit = fruitService.getOneFruit(id);
-        return ResponseEntity.ok(gettedFruit);
+        Fruit gottenFruit = fruitService.getOneFruit(id);
+        return ResponseEntity.ok(gottenFruit);
     }
 
     // http://localhost:8080/fruit/getAll

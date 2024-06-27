@@ -1,17 +1,23 @@
 package cat.itacademy.barcelonactiva.Michel.S05.T01.N01.model.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 
 @Entity
+@Table(name = "branch")
 public class Branch {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "pk_branch_id")
     private int pk_branchID;
+
+    @NotEmpty(message = "Branch name cannot be empty")
+    @Column(name = "branch_name", length = 45, nullable = false)
     private String branchName;
+
+    @NotEmpty(message = "Branch country cannot be empty")
+    @Column(name = "branch_country", length = 45, nullable = false)
     private String branchCountry;
 
     public Branch(String branchName, String branchCountry) {

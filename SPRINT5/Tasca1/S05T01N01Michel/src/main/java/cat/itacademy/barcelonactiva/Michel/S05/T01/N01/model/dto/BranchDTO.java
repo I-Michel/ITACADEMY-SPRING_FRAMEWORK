@@ -1,5 +1,7 @@
 package cat.itacademy.barcelonactiva.Michel.S05.T01.N01.model.dto;
 
+import jakarta.validation.constraints.NotEmpty;
+
 import java.text.Collator;
 import java.util.List;
 import java.util.Locale;
@@ -7,7 +9,9 @@ import java.util.Locale;
 public class BranchDTO {
 
     private int pk_branchID;
+    @NotEmpty(message = "Branch name cannot be empty")
     private String branchName;
+    @NotEmpty(message = "Branch country cannot be empty")
     private String branchCountry;
     private String branchType;
     private static final List<String> EU_COUNTRIES = List.of("Austria", "Belgium", "Bulgaria",
