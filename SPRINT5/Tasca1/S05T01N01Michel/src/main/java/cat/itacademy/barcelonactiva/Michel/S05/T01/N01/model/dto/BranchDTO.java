@@ -1,13 +1,14 @@
 package cat.itacademy.barcelonactiva.Michel.S05.T01.N01.model.dto;
 
+import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotEmpty;
-
 import java.text.Collator;
 import java.util.List;
 import java.util.Locale;
 
 public class BranchDTO {
 
+    @Id
     private int pk_branchID;
     @NotEmpty(message = "Branch name cannot be empty")
     private String branchName;
@@ -45,6 +46,10 @@ public class BranchDTO {
 
     public String getBranchType() {
         return branchType;
+    }
+
+    public void setPk_branchID(int pk_branchID) {
+        this.pk_branchID = pk_branchID;
     }
 
     public void setBranchName(String branchName) {
