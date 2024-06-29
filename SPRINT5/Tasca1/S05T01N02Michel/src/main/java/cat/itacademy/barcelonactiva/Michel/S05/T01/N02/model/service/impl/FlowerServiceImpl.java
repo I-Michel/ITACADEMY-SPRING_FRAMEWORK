@@ -37,7 +37,7 @@ public class FlowerServiceImpl implements FlowerService {
     @Override
     public FlowerDTO updateFlower(FlowerDTO dto) {
         Optional<Flower> optionalBranch = getOptionalFlower(dto.getPk_flowerID());
-        Flower okFlower = optionalBranch.orElseThrow(() -> new FlowerNotFoundException("Flower not found with id: " + dto.getPk_flowerID()));
+        Flower okFlower = optionalBranch.orElseThrow(() -> new FlowerNotFoundException(dto.getPk_flowerID()));
 
         okFlower.setFlowerName(dto.getFlowerName());
         okFlower.setFlowerCountry(dto.getFlowerCountry());
@@ -48,7 +48,7 @@ public class FlowerServiceImpl implements FlowerService {
     @Override
     public FlowerDTO deleteFlower(int id) {
         Optional<Flower> optionalBranch = getOptionalFlower(id);
-        Flower okFlower = optionalBranch.orElseThrow(() -> new FlowerNotFoundException("Flower not found with id: " + id));
+        Flower okFlower = optionalBranch.orElseThrow(() -> new FlowerNotFoundException(id));
 
         flowerRepository.deleteById(id);
         return convertToDTO(okFlower);
@@ -58,7 +58,7 @@ public class FlowerServiceImpl implements FlowerService {
     public FlowerDTO getOneFlower(int id) {
         Optional<Flower> optionalBranch = getOptionalFlower(id);
 
-        return convertToDTO(optionalBranch.orElseThrow(() -> new FlowerNotFoundException("Flower not found with id: " + id)));
+        return convertToDTO(optionalBranch.orElseThrow(() -> new FlowerNotFoundException(id)));
     }
 
     @Override

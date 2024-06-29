@@ -3,6 +3,7 @@ package cat.itacademy.barcelonactiva.Michel.S05.T01.N02.controller;
 import cat.itacademy.barcelonactiva.Michel.S05.T01.N02.model.dto.FlowerDTO;
 import cat.itacademy.barcelonactiva.Michel.S05.T01.N02.model.service.impl.FlowerServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -19,7 +20,7 @@ public class FlowerController {
     @PostMapping("/add")
     public ResponseEntity<FlowerDTO> addFlower(@RequestBody FlowerDTO dto) {
         FlowerDTO addedDto = flowerService.addFlower(dto);
-        return ResponseEntity.ok(addedDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(addedDto);
     }
 
     @PutMapping("/update")
@@ -30,8 +31,8 @@ public class FlowerController {
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<FlowerDTO> deleteFlower(@PathVariable int id) {
-        FlowerDTO deletedDto = flowerService.deleteFlower(id);
-        return ResponseEntity.ok(deletedDto);
+        flowerService.deleteFlower(id);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/getOne/{id}")
