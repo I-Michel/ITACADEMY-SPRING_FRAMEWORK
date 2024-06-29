@@ -35,15 +35,12 @@ public class BranchDTO {
     public int getPk_branchID() {
         return pk_branchID;
     }
-
     public String getBranchName() {
         return branchName;
     }
-
     public String getBranchCountry() {
         return branchCountry;
     }
-
     public String getBranchType() {
         return branchType;
     }
@@ -51,11 +48,9 @@ public class BranchDTO {
     public void setPk_branchID(int pk_branchID) {
         this.pk_branchID = pk_branchID;
     }
-
     public void setBranchName(String branchName) {
         this.branchName = branchName;
     }
-
     public void setBranchCountry(String branchCountry) {
         this.branchCountry = branchCountry;
     }
@@ -77,6 +72,6 @@ public class BranchDTO {
     @Override
     public String toString() {
         return "ID: " + this.pk_branchID + " - Branch: " + this.branchName + " - Country: "
-                + this.branchCountry + " - Type: " + this.branchType + ".";
+                + this.branchCountry + " - Region: " + this.branchType + ".";
     }
 }

@@ -40,7 +40,6 @@ public class Branch {
     }
 
     public void setPk_branchID(int pk_branchID) { this.pk_branchID = pk_branchID; }
-
     public void setBranchName(String branchName) {
         this.branchName = branchName;
     }
