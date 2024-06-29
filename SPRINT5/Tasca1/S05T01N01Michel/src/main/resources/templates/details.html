@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Details</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+<body>
+<style>
+    body {
+        padding-top: 1em;
+    }
+</style>
+<div class="container">
+    <h1 class="text-center">Branch details</h1>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Branch ID</th>
+            <th>Name</th>
+            <th>Country</th>
+            <th>Region</th>
+        </tr>
+        </thead>
+        <tbody>
+        <td th:text="${branch.pk_branchID}">Branch ID</td>
+        <td th:text="${branch.branchName}">Name</td>
+        <td th:text="${branch.branchCountry}">Country</td>
+        <td th:text="${branch.branchType}">Region</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div class="text-center">
+    <br>
+    <a href="/home" class="btn btn-primary">Go to 'Home'</a>
+    <br>
+    <br>
+    <a href="/web/branches" class="btn btn-secondary">Check branch list</a>
+</div>
+</body>
+</html>

@@ -3,6 +3,7 @@ package cat.itacademy.barcelonactiva.Michel.S05.T01.N01.controller;
 import cat.itacademy.barcelonactiva.Michel.S05.T01.N01.model.dto.BranchDTO;
 import cat.itacademy.barcelonactiva.Michel.S05.T01.N01.model.service.impl.BranchServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -61,6 +62,13 @@ public class WebController {
         branchService.deleteBranch(id);
         model.addAttribute("operation", "delete");
         return "success";
+    }
+
+    @GetMapping("/web/details/{id}")
+    public String getOneBranch(@PathVariable int id, Model model) {
+        BranchDTO gottenDto = branchService.getOneBranch(id);
+        model.addAttribute("branch", gottenDto);
+        return "details";
     }
 
     @GetMapping("/success")

@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>List</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 </head>
 <body>
 <style>
@@ -19,7 +20,7 @@
             <th>Branch ID</th>
             <th>Name</th>
             <th>Country</th>
-            <th> </th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
@@ -28,6 +29,8 @@
             <td th:text="${branch.branchName}">Name</td>
             <td th:text="${branch.branchCountry}">Country</td>
             <td>
+                <a th:href="@{/web/details/{id}(id=${branch.pk_branchID})}" class="btn btn-success btn-sm">Show
+                    details</a>
                 <a th:href="@{/web/update/{id}(id=${branch.pk_branchID})}" class="btn btn-primary btn-sm">Edit</a>
                 <form th:action="@{/web/delete/{id}(id=${branch.pk_branchID})}" method="post" style="display:inline;">
                     <input type="hidden" name="_method" value="delete"/>
@@ -37,6 +40,10 @@
         </tr>
         </tbody>
     </table>
+</div>
+<div class="text-center">
+    <br>
+    <a href="/home" class="btn btn-primary">Go to 'Home'</a>
 </div>
 </body>
 </html>
