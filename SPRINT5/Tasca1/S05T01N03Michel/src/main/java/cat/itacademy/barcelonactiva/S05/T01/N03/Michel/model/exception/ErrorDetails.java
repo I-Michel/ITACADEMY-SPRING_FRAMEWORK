@@ -1,17 +1,15 @@
-package cat.itacademy.barcelonactiva.Michel.S05.T01.N01.exception;
+package cat.itacademy.barcelonactiva.S05.T01.N03.Michel.model.exception;
 
 public class ErrorDetails {
 
     private int statusCode;
     private String message;
     private String description;
-
     public ErrorDetails(int statusCode, String message, String description) {
         this.statusCode = statusCode;
         this.message = message;
         this.description = description;
     }
-
     public int getStatusCode() {
         return statusCode;
     }

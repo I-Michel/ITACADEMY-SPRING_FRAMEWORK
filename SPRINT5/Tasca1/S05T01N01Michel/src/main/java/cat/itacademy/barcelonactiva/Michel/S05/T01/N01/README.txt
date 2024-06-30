@@ -16,7 +16,7 @@ EXERCICI: Aplicació Web CRUD amb MySQL
 Accedeix a la pàgina -> https://start.spring.io/, i genera un projecte Spring boot amb les següents
 característiques:
 
--------------------------------------------------------------------
+------------------------------------------------------------------------------------------
 * PROJECT (gestor de dependències): Maven.
 
 * LANGUAGE: Java.
@@ -35,7 +35,7 @@ característiques:
 * JAVA: Mínim versió 11
 
 * DEPENDENCIES: Spring Boot DevTools, Spring Web, Spring Data JPA, MySQL Driver, Thymeleaf
--------------------------------------------------------------------
+------------------------------------------------------------------------------------------
 
 Tenim una entitat anomenada Sucursal, que disposa de les següents propietats:
 

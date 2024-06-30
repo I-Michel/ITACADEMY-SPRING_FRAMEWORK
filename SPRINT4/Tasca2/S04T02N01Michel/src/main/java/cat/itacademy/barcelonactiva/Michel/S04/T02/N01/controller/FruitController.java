@@ -1,6 +1,5 @@
 package cat.itacademy.barcelonactiva.Michel.S04.T02.N01.controller;
 
-import cat.itacademy.barcelonactiva.Michel.S04.T02.N01.exception.FruitNotFoundException;
 import cat.itacademy.barcelonactiva.Michel.S04.T02.N01.model.domain.Fruit;
 import cat.itacademy.barcelonactiva.Michel.S04.T02.N01.model.service.impl.FruitServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,14 +24,14 @@ public class FruitController {
 
     // http://localhost:8080/fruit/update
     @PutMapping("/update")
-    public ResponseEntity<Fruit> updateFruit(@RequestBody Fruit fruit) throws FruitNotFoundException {
+    public ResponseEntity<Fruit> updateFruit(@RequestBody Fruit fruit) {
         Fruit updatedFruit = fruitService.updateFruit(fruit);
         return ResponseEntity.ok(updatedFruit);
     }
 
     // http://localhost:8080/fruit/delete/{id}
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Fruit> deleteFruit(@PathVariable int id) throws FruitNotFoundException {
+    public ResponseEntity<Fruit> deleteFruit(@PathVariable int id) {
         Fruit deletedFruit = fruitService.deleteFruit(id);
         return ResponseEntity.ok(deletedFruit);
     }
@@ -40,7 +39,7 @@ public class FruitController {
 
     // http://localhost:8080/fruit/getOne/{id}
     @GetMapping("/getOne/{id}")
-    public ResponseEntity<Fruit> getOneFruit(@PathVariable int id) throws FruitNotFoundException {
+    public ResponseEntity<Fruit> getOneFruit(@PathVariable int id) {
         Fruit gottenFruit = fruitService.getOneFruit(id);
         return ResponseEntity.ok(gottenFruit);
     }
