@@ -2,7 +2,6 @@ package cat.itacademy.barcelonactiva.Michel.S05.T01.N02.model.dto;
 
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotEmpty;
-
 import java.text.Collator;
 import java.util.List;
 import java.util.Locale;
