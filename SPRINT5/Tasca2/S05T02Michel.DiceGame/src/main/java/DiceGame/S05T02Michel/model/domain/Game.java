@@ -1,67 +1,36 @@
 package DiceGame.S05T02Michel.model.domain;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.bson.types.ObjectId;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.mongodb.core.mapping.Document;
+import java.util.Date;
 
-@Entity
-@Table(name = "game")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Document(collection = "games")
 public class Game {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_game")
-    private int gameId;
+    private ObjectId gameId;
 
-    @NotEmpty
-    @Column(name = "dice_roll1", nullable = false)
+    @NotNull
     private int diceRoll1;
 
-    @NotEmpty
-    @Column(name = "dice_roll2", nullable = false)
+    @NotNull
     private int diceRoll2;
 
-    @ManyToOne
-    @JoinColumn(name = "player_id", nullable = false)
-    private Player player;
+    @CreatedDate
+    @NotNull
+    private Date gameDate;
 
-    public Game(int diceRoll1, int diceRoll2, Player player) {
-        this.diceRoll1 = diceRoll1;
-        this.diceRoll2 = diceRoll2;
-        this.player = player;
-    }
-
-    public Game() {
-
-    }
-
-    public int getGameId() {
-        return gameId;
-    }
-    public int getDiceRoll1() {
-        return diceRoll1;
-    }
-    public int getDiceRoll2() {
-        return diceRoll2;
-    }
-    public Player getPlayer() {
-        return player;
-    }
-
-    public void setGameId(int gameId) {
-        this.gameId = gameId;
-    }
-    public void setDiceRoll1(int diceRoll1) {
-        this.diceRoll1 = diceRoll1;
-    }
-    public void setDiceRoll2(int diceRoll2) {
-        this.diceRoll2 = diceRoll2;
-    }
-    public void setPlayer(Player player) {
-        this.player = player;
-    }
-
-    @Override
-    public String toString() {
-        return "ID: " + this.gameId + " - Player: " + this.player.getPlayerName() +
-                " - 1st Dice Roll: " + this.diceRoll1 + " - 2nd Dice Roll: " + this.diceRoll2 +  ".";
-    }
+    @NotNull
+    private int playerId;
 }
+

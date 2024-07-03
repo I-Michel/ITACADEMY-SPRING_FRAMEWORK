@@ -1,7 +1,5 @@
 package cat.itacademy.barcelonactiva.Michel.S04.T02.N03.model.domain;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.Document;

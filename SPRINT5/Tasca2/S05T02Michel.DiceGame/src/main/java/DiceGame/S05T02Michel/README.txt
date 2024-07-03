@@ -30,15 +30,15 @@ El software ha de respectar els principals patrons de disseny.
 Has de tindre en compte els següents detalls de construcció (URL's):
 - POST: /players: crea un jugador/a.
 - PUT /players: modifica el nom del jugador/a.
-- POST /players/{id}/games/ : un jugador/a específic realitza una tirada dels daus.
+- POST /players/{id}/games: un jugador/a específic realitza una tirada dels daus.
 - DELETE /players/{id}/games: elimina les tirades del jugador/a.
-- GET /players/: retorna el llistat de tots  els jugadors/es del sistema amb el seu percentatge
+- GET /players/: retorna el llistat de tots els jugadors/es del sistema amb el seu percentatge
                  mitjà d’èxits.
 - GET /players/{id}/games: retorna el llistat de jugades per un jugador/a.
 - GET /players/ranking: retorna el ranking mig de tots els jugadors/es del sistema. És a dir,
                         el percentatge mitjà d’èxits.
-- GET /players/ranking/loser: retorna el jugador/a  amb pitjor percentatge d’èxit.
-- GET /players/ranking/winner: retorna el  jugador amb pitjor percentatge d’èxit.
+- GET /players/ranking/loser: retorna el jugador/a amb pitjor percentatge d’èxit.
+- GET /players/ranking/winner: retorna el jugador amb millor percentatge d’èxit.
 
 ** FASE 1 **
 Persistència: utilitza com a base de dades MySQL.
