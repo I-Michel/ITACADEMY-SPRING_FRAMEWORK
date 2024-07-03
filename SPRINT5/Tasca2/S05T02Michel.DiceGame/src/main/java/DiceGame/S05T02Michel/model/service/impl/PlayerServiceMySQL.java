@@ -5,12 +5,14 @@ import DiceGame.S05T02Michel.model.dto.GameDTO;
 import DiceGame.S05T02Michel.model.dto.PlayerDTO;
 import DiceGame.S05T02Michel.model.exception.PlayerAlreadyExistsException;
 import DiceGame.S05T02Michel.model.exception.PlayerNotFoundException;
+import DiceGame.S05T02Michel.model.mapper.PlayerMapper;
 import DiceGame.S05T02Michel.model.repository.GameRepository;
 import DiceGame.S05T02Michel.model.repository.PlayerRepository;
 import DiceGame.S05T02Michel.model.service.PlayerService;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -21,21 +23,8 @@ public class PlayerServiceMySQL implements PlayerService {
     private PlayerRepository playerRepository;
     @Autowired
     private GameRepository gameRepository;
-
-    private PlayerDTO convertToDTO(Player player) {
-        return PlayerDTO.builder()
-                .playerId(player.getPlayerId())
-                .playerName(player.getPlayerName())
-                .registrationDate(player.getRegistrationDate())
-                .games(new ArrayList<GameDTO>())
-                .build();
-    }
-
-    private Player convertToEntity(PlayerDTO dto) {
-        return Player.builder()
-                .playerName(dto.getPlayerName())
-                .build();
-    }
+    @Autowired
+    private PlayerMapper playerMapper;
 
     @Override
     public String validatePlayerName(String playerName) {
@@ -51,7 +40,7 @@ public class PlayerServiceMySQL implements PlayerService {
     @Override
     public PlayerDTO addPlayer(PlayerDTO dto) {
         validatePlayerName(dto.getPlayerName());
-        return convertToDTO(playerRepository.save(convertToEntity(dto)));
+        return playerMapper.convertToDTO(playerRepository.save(playerMapper.convertToEntity(dto)));
     }
 
     @Override
@@ -63,14 +52,14 @@ public class PlayerServiceMySQL implements PlayerService {
     public PlayerDTO getOnePlayer(int playerId) {
         Optional<Player> optionalPlayer = getOptionalPlayer(playerId);
 
-        return convertToDTO(optionalPlayer.orElseThrow(() -> new PlayerNotFoundException(playerId)));
+        return playerMapper.convertToDTO(optionalPlayer.orElseThrow(() -> new PlayerNotFoundException(playerId)));
     }
 
     @Override
     public List<PlayerDTO> getAllPlayers() {
         List<Player> players = playerRepository.findAll();
         return players.stream()
-                .map(this::convertToDTO)
+                .map(playerMapper::convertToDTO)
                 .collect(Collectors.toList());
     }
 
@@ -81,7 +70,7 @@ public class PlayerServiceMySQL implements PlayerService {
 
         okPlayer.setPlayerName(validatePlayerName(okPlayer.getPlayerName()));
 
-        return convertToDTO(playerRepository.save(okPlayer));
+        return playerMapper.convertToDTO(playerRepository.save(okPlayer));
     }
 
     @Override
@@ -92,12 +81,21 @@ public class PlayerServiceMySQL implements PlayerService {
         playerRepository.deleteById(playerId);
         gameRepository.deleteAllByPlayerId(playerId);
 
-        return convertToDTO(okPlayer);
+        return playerMapper.convertToDTO(okPlayer);
     }
 
     @Override
-    public void getPlayerWinrate(int playerId) {
-        List<GameDTO> games = getAllGames(playerId);
+    public float getPlayerWinRate(int playerId) {
+        List<GameDTO> games = getOnePlayer(playerId).getGames();
 
+        int wonGames = (int) games.stream()
+                .filter(GameDTO::isWin)
+                .count();
+
+        int totalGames = games.size();
+
+        return (totalGames > 0) ? (float) wonGames / totalGames : 0f;
     }
+
+
 }

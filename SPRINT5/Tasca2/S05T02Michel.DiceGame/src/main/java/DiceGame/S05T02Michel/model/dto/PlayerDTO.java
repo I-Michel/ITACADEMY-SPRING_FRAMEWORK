@@ -1,5 +1,6 @@
 package DiceGame.S05T02Michel.model.dto;
 
+import DiceGame.S05T02Michel.model.domain.Game;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
