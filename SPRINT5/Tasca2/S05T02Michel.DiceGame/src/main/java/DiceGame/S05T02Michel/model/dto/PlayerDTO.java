@@ -1,6 +1,5 @@
 package DiceGame.S05T02Michel.model.dto;
 
-import DiceGame.S05T02Michel.model.domain.Game;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,8 +18,4 @@ public class PlayerDTO {
     private Date registrationDate;
     private List<GameDTO> games;
     private float winRate;
-
-    public static class calculateWinRate(int playerId) {
-
-    }
 }

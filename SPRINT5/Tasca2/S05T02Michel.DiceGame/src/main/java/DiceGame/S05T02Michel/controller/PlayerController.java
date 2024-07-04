@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
@@ -34,8 +33,7 @@ public class PlayerController {
     @Operation(summary = "Get player details by ID")
     @GetMapping("/get/{id}")
     public ResponseEntity<PlayerDTO> getOnePlayer(@PathVariable int playerId) {
-        PlayerDTO gottenDto = playerServiceMySQL.getOnePlayer(playerId);
-        return ResponseEntity.ok(gottenDto);
+        return ResponseEntity.ok(playerServiceMySQL.getOnePlayer(playerId));
     }
 
     // GET '/players/': retorna el llistat de tots els jugadors/es del sistema amb el seu percentatge mitjà d’èxits.
@@ -43,23 +41,26 @@ public class PlayerController {
     @GetMapping("/")
     public ResponseEntity<List<PlayerDTO>> getAllPlayers() {
         return ResponseEntity.ok(playerServiceMySQL.getAllPlayers());
-        // FALTA ARREGLAR WINRATE
     }
 
     // GET '/players/ranking': retorna el ranking mig de tots els jugadors/es del sistema. És a dir, el percentatge mitjà d’èxits.
-   /* @Operation(summary = "Get the average win ratio of all players")
+    @Operation(summary = "Get the average win rate of all players")
     @GetMapping("/winrate")
-    public ResponseEntity<PlayerDTO> getAverageWinrate() {
-        return ResponseEntity.ok(playerServiceMySQL.getAllPlayers());
-        // FALTA ARREGLAR WINRATE
-    } */
+    public ResponseEntity<Float> getAverageWinRate() {
+       return ResponseEntity.ok(playerServiceMySQL.getAverageWinRate());
+    }
 
     // GET '/players/ranking/winner': retorna el jugador amb millor percentatge d’èxit.
-    // @Operation(summary = "Get best win rate player")
+    @Operation(summary = "Get best win rate player")
+    @GetMapping("/winrate/winner")
+    public ResponseEntity<PlayerDTO> getBestPlayer() {
+        return ResponseEntity.ok(playerServiceMySQL.getBestPlayer());
+    }
 
-
-    // @Operation(summary = "Get worst win rate player")
     // GET '/players/ranking/loser': retorna el jugador/a amb pitjor percentatge d’èxit.
-
-
+    @Operation(summary = "Get worst win rate player")
+    @GetMapping("/winrate/loser")
+    public ResponseEntity<PlayerDTO> getWorstPlayer() {
+        return ResponseEntity.ok(playerServiceMySQL.getWorstPlayer());
+    }
 }

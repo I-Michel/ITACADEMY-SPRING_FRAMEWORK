@@ -14,5 +14,7 @@ public interface PlayerService {
     PlayerDTO updatePlayerName(PlayerDTO dto);
     PlayerDTO deletePlayer(int id);
     float getPlayerWinRate(int playerId);
-
+    float getAverageWinRate();
+    PlayerDTO getBestPlayer();
+    PlayerDTO getWorstPlayer();
 }
