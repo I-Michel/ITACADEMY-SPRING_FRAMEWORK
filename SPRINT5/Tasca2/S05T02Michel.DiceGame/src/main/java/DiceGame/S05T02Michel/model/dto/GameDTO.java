@@ -16,7 +16,10 @@ public class GameDTO {
     private ObjectId gameId;
     private int diceRoll1;
     private int diceRoll2;
-    private int result = diceRoll1 + diceRoll2;
+
+    @Builder.Default
+    private int result = 0;
+
     private boolean win;
     private Date gameDate;
     private int playerId;

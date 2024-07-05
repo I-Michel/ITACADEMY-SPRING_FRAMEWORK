@@ -25,6 +25,19 @@ CREATE TABLE IF NOT EXISTS `dicegamedb`.`player` (
 ENGINE = InnoDB;
 
 
+-- -----------------------------------------------------
+-- Table `dicegamedb`.`user`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `dicegamedb`.`user` (
+  `id_user` INT NOT NULL AUTO_INCREMENT,
+  `email` VARCHAR(45) NOT NULL,
+  `password` VARCHAR(45) NOT NULL,
+  `role` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`id_user`),
+  UNIQUE INDEX `email_UNIQUE` (`email` ASC) VISIBLE)
+ENGINE = InnoDB;
+
+
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
