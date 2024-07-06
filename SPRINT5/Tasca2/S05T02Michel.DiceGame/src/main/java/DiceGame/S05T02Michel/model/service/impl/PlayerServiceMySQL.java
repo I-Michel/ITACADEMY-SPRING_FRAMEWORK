@@ -11,12 +11,14 @@ import DiceGame.S05T02Michel.model.repository.GameRepository;
 import DiceGame.S05T02Michel.model.repository.PlayerRepository;
 import DiceGame.S05T02Michel.model.service.PlayerService;
 import io.micrometer.common.util.StringUtils;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class PlayerServiceMySQL implements PlayerService {
 
     @Autowired
