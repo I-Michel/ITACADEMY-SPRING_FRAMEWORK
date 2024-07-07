@@ -37,7 +37,6 @@ public class GameServiceMongoDBUnitTest {
         MockitoAnnotations.openMocks(this);
     }
 
-    @DisplayName("GameServiceMongoDBUnitTest - Test return superHeroes list")
     @Test
     public void whenNewGame_thenNewGameDTOShouldBeCreated() {
         when(gameRepository.save(any(Game.class))).thenAnswer(invocation -> invocation.getArgument(0));
