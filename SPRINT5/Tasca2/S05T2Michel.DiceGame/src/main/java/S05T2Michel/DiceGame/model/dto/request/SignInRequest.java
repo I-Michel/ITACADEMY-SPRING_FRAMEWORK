@@ -15,11 +15,10 @@ import lombok.NoArgsConstructor;
 public class SignInRequest {
 
     @NotBlank
-    @Size(max = 45)
-    @Email
-    private String email;
+    @Size(min = 6, max = 10)
+    private String playerName;
 
     @NotBlank
-    @Size(min = 6, max = 45)
+    @Size(min = 6, max = 10)
     private String password;
 }

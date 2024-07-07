@@ -6,6 +6,7 @@ import S05T2Michel.DiceGame.model.exception.GameNotFoundException;
 import S05T2Michel.DiceGame.model.mapper.GameMapper;
 import S05T2Michel.DiceGame.model.repository.mongodb.GameRepository;
 import S05T2Michel.DiceGame.model.service.GameService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -13,12 +14,14 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class GameServiceMongoDB implements GameService {
 
     @Autowired
-    private GameRepository gameRepository;
+    private final GameRepository gameRepository;
+
     @Autowired
-    private GameMapper gameMapper;
+    private final GameMapper gameMapper;
 
     @Override
     public GameDTO newGame(int playerId) {

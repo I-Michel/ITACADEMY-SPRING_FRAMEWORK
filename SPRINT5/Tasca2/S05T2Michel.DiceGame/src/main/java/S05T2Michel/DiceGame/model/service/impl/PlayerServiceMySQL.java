@@ -1,7 +1,6 @@
 package S05T2Michel.DiceGame.model.service.impl;
 
 import S05T2Michel.DiceGame.model.domain.Player;
-import S05T2Michel.DiceGame.model.dto.GameDTO;
 import S05T2Michel.DiceGame.model.dto.PlayerDTO;
 import S05T2Michel.DiceGame.model.exception.NoPlayersFoundException;
 import S05T2Michel.DiceGame.model.exception.PlayerAlreadyExistsException;
@@ -11,8 +10,11 @@ import S05T2Michel.DiceGame.model.repository.mongodb.GameRepository;
 import S05T2Michel.DiceGame.model.repository.mysql.PlayerRepository;
 import S05T2Michel.DiceGame.model.service.PlayerService;
 import io.micrometer.common.util.StringUtils;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import java.util.Comparator;
 import java.util.List;
@@ -21,15 +23,17 @@ import java.util.OptionalDouble;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class PlayerServiceMySQL implements PlayerService {
 
     @Autowired
-    private PlayerRepository playerRepository;
+    private final PlayerRepository playerRepository;
+
     @Autowired
-    private GameRepository gameRepository;
+    private final GameRepository gameRepository;
+
     @Autowired
-    @Lazy
-    private PlayerMapper playerMapper;
+    private final PlayerMapper playerMapper;
 
     @Override
     public String validatePlayerName(String playerName) {
@@ -39,12 +43,6 @@ public class PlayerServiceMySQL implements PlayerService {
             throw new PlayerAlreadyExistsException(playerName);
         }
         return playerName;
-    }
-
-    @Override
-    public PlayerDTO addPlayer(PlayerDTO dto) {
-        validatePlayerName(dto.getPlayerName());
-        return playerMapper.convertToDTO(playerRepository.save(playerMapper.convertToEntity(dto)));
     }
 
     @Override
@@ -68,11 +66,11 @@ public class PlayerServiceMySQL implements PlayerService {
     }
 
     @Override
-    public PlayerDTO updatePlayerName(PlayerDTO dto) {
-        Optional<Player> optionalPlayer = getOptionalPlayer(dto.getPlayerId());
-        Player okPlayer = optionalPlayer.orElseThrow(() -> new PlayerNotFoundException(dto.getPlayerId()));
+    public PlayerDTO updatePlayerName(int id, String newPlayerName) {
+        Optional<Player> optionalPlayer = getOptionalPlayer(id);
+        Player okPlayer = optionalPlayer.orElseThrow(() -> new PlayerNotFoundException(id));
 
-        okPlayer.setPlayerName(validatePlayerName(okPlayer.getPlayerName()));
+        okPlayer.setPlayerName(validatePlayerName(newPlayerName));
 
         return playerMapper.convertToDTO(playerRepository.save(okPlayer));
     }
@@ -86,17 +84,6 @@ public class PlayerServiceMySQL implements PlayerService {
         gameRepository.deleteAllByPlayerId(playerId);
 
         return playerMapper.convertToDTO(okPlayer);
-    }
-
-    @Override
-    public float getPlayerWinRate(int playerId) {
-        List<GameDTO> games = getOnePlayer(playerId).getGames();
-
-        int wonGames = (int) games.stream()
-                .filter(GameDTO::isWin)
-                .count();
-
-        return (!games.isEmpty()) ? (float) wonGames / games.size() : 0f;
     }
 
     @Override
@@ -130,5 +117,16 @@ public class PlayerServiceMySQL implements PlayerService {
         return players.stream()
                 .min(Comparator.comparing(PlayerDTO::getWinRate))
                 .orElseThrow(NoPlayersFoundException::new);
+    }
+
+    @Override
+    public UserDetailsService userDetailsService() {
+        return new UserDetailsService() {
+            @Override
+            public UserDetails loadUserByUsername(String playerName) {
+                return playerRepository.findPlayerByPlayerName(playerName)
+                        .orElseThrow(() -> new UsernameNotFoundException("Player not found with name: " + playerName));
+            }
+        };
     }
 }

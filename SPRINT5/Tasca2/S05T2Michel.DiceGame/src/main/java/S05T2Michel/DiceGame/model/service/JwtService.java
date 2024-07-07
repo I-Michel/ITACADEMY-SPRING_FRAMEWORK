@@ -3,7 +3,7 @@ package S05T2Michel.DiceGame.model.service;
 import org.springframework.security.core.userdetails.UserDetails;
 
 public interface JwtService {
-    String extractEmail(String token);
+    String extractPlayerName(String token);
 
     String generateToken(UserDetails userDetails);
 

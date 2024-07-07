@@ -1,7 +1,7 @@
 package S05T2Michel.DiceGame.security;
 
 import S05T2Michel.DiceGame.model.service.impl.JwtServiceImpl;
-import S05T2Michel.DiceGame.model.service.impl.UserServiceImpl;
+import S05T2Michel.DiceGame.model.service.impl.PlayerServiceMySQL;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,26 +23,27 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Autowired
-    private JwtServiceImpl jwtService;
+    private final JwtServiceImpl jwtService;
 
     @Autowired
-    private UserServiceImpl userService;
+    @Lazy
+    private final PlayerServiceMySQL playerService;
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
                                     @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain) throws ServletException, IOException {
         final String authorizationHeader = request.getHeader("Authorization");
-        String email = null;
+        String playerName = null;
         String jwt = null;
 
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             jwt = authorizationHeader.substring(7);
-            email = jwtService.extractEmail(jwt);
+            playerName = jwtService.extractPlayerName(jwt);
         }
 
-        if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = userService.userDetailsService().loadUserByUsername(email);
+        if (playerName != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            UserDetails userDetails = playerService.userDetailsService().loadUserByUsername(playerName);
             if (jwtService.isTokenValid(jwt, userDetails)) {
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());

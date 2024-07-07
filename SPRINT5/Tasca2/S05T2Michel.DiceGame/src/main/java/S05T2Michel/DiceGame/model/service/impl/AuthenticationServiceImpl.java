@@ -1,46 +1,80 @@
 package S05T2Michel.DiceGame.model.service.impl;
 
-import S05T2Michel.DiceGame.model.domain.User;
+import S05T2Michel.DiceGame.model.domain.Player;
 import S05T2Michel.DiceGame.model.dto.request.SignInRequest;
 import S05T2Michel.DiceGame.model.dto.request.SignUpRequest;
 import S05T2Michel.DiceGame.model.dto.response.AuthenticationResponse;
 import S05T2Michel.DiceGame.model.enums.Role;
-import S05T2Michel.DiceGame.model.exception.UserAlreadyExistsException;
-import S05T2Michel.DiceGame.model.exception.UserNotFoundException;
-import S05T2Michel.DiceGame.model.repository.mysql.UserRepository;
+import S05T2Michel.DiceGame.model.exception.PlayerAlreadyExistsException;
+import S05T2Michel.DiceGame.model.exception.PlayerNotFoundException;
+import S05T2Michel.DiceGame.model.repository.mysql.PlayerRepository;
 import S05T2Michel.DiceGame.model.service.AuthenticationService;
+import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+
 @Service
+@RequiredArgsConstructor
 public class AuthenticationServiceImpl implements AuthenticationService {
-    private UserRepository userRepository;
-    private PasswordEncoder passwordEncoder;
-    private JwtServiceImpl jwtService;
-    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private final PlayerRepository playerRepository;
+
+    @Autowired
+    private final PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private final JwtServiceImpl jwtService;
+
+    @Autowired
+    private final PlayerServiceMySQL playerService;
+
+    @Autowired
+    private final AuthenticationManager authenticationManager;
+
+    @PostConstruct
+    public void createAdminIfDoesNotExist() {
+        boolean adminExists = playerRepository.findPlayerByPlayerName("admin").isPresent();
+
+        if (!adminExists) {
+            Player admin = Player.builder()
+                    .playerName("admin")
+                    .password(passwordEncoder.encode("admin"))
+                    .registrationDate(new Date())
+                    .role(Role.ADMIN)
+                    .build();
+            playerRepository.save(admin);
+        }
+    }
 
     @Override
     public AuthenticationResponse signUp(SignUpRequest request) {
-        if (request.getEmail().isEmpty() || request.getPassword().isEmpty()){
-            throw new IllegalArgumentException("Email and password cannot be null");
+        playerService.validatePlayerName(request.getPlayerName());
+
+        if (request.getPassword().isEmpty()) {
+            throw new IllegalArgumentException("Password cannot be null");
         }
 
-        userRepository.findUserByEmail(request.getEmail())
+        playerRepository.findPlayerByPlayerName(request.getPlayerName())
                 .ifPresent(user -> {
-                    throw new UserAlreadyExistsException(user.getEmail());
+                    throw new PlayerAlreadyExistsException(user.getPlayerName());
                 });
 
-
-        User user = User.builder()
-                .email(request.getEmail())
+        Player player = Player.builder()
+                .playerName(request.getPlayerName())
                 .password(passwordEncoder.encode(request.getPassword()))
+                .registrationDate(new Date())
                 .role(Role.USER)
                 .build();
 
-        userRepository.save(user);
-        String token = jwtService.generateToken(user);
+        playerRepository.save(player);
+        String token = jwtService.generateToken(player);
 
         return AuthenticationResponse.builder()
                 .token(token)
@@ -50,12 +84,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public AuthenticationResponse signIn(SignInRequest request) {
         authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
+                new UsernamePasswordAuthenticationToken(request.getPlayerName(), request.getPassword()));
 
-        User user = userRepository.findUserByEmail(request.getEmail())
-                .orElseThrow(()-> new UserNotFoundException(request.getEmail()));
+        Player player = playerRepository.findPlayerByPlayerName(request.getPlayerName())
+                .orElseThrow(() -> new PlayerNotFoundException(request.getPlayerName()));
 
-        String token = jwtService.generateToken(user);
+        String token = jwtService.generateToken(player);
 
         return AuthenticationResponse.builder()
                 .token(token)

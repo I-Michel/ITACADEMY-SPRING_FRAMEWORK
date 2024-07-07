@@ -1,6 +1,6 @@
 package S05T2Michel.DiceGame.config;
 
-import S05T2Michel.DiceGame.model.service.impl.UserServiceImpl;
+import S05T2Michel.DiceGame.model.service.impl.PlayerServiceMySQL;
 import S05T2Michel.DiceGame.security.JwtAuthenticationEntryPoint;
 import S05T2Michel.DiceGame.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +30,7 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
-    private final UserServiceImpl userService;
+    private final PlayerServiceMySQL playerService;
     private final JwtAuthenticationEntryPoint unauthorizedHandler;
 
     @Bean
@@ -39,12 +39,13 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(publicEndpoints()).permitAll()
+                        .requestMatchers("/players/delete/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
-                .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
         return httpSecurity.build();
     }
 
@@ -56,7 +57,7 @@ public class SecurityConfig {
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProv = new DaoAuthenticationProvider();
-        authProv.setUserDetailsService(userService.userDetailsService());
+        authProv.setUserDetailsService(playerService.userDetailsService());
         authProv.setPasswordEncoder(passwordEncoder());
         return authProv;
     }
@@ -69,8 +70,10 @@ public class SecurityConfig {
     private RequestMatcher publicEndpoints(){
         return new OrRequestMatcher(
                 new AntPathRequestMatcher("/auth/**"),
-                new AntPathRequestMatcher("/players/**"),
+                new AntPathRequestMatcher("/player/**"),
+                new AntPathRequestMatcher("/swagger"),
                 new AntPathRequestMatcher("/swagger/**"),
+                new AntPathRequestMatcher("/swagger-ui/**"),
                 new AntPathRequestMatcher("/swagger-resources/**"),
                 new AntPathRequestMatcher("/swaggerDiceGame"),
                 new AntPathRequestMatcher("/v3/api-docs/**"),
