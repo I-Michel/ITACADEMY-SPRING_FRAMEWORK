@@ -20,19 +20,16 @@ public class PlayerMapper {
     private final GameServiceMongoDB gameService;
 
     public PlayerDTO convertToDTO(Player player) {
-
-        List<GameDTO> games = gameService.getAllGames(player.getPlayerId());
-
         PlayerDTO dto = PlayerDTO.builder()
                 .playerId(player.getPlayerId())
                 .playerName(player.getPlayerName())
                 .password(player.getPassword())
                 .role(player.getRole())
                 .registrationDate(player.getRegistrationDate())
-                .games(games)
+                .winRate(getPlayerWinRate(player.getPlayerId()))
                 .build();
 
-        dto.setWinRate(dto.calculateWinRate());
+        dto.setWinRate(getPlayerWinRate(dto.getPlayerId()));
 
         return dto;
     }
@@ -43,5 +40,15 @@ public class PlayerMapper {
                 .password(dto.getPassword())
                 .role(dto.getRole())
                 .build();
+    }
+
+    public float getPlayerWinRate(int id) {
+        List<GameDTO> games = gameService.getAllGames(id);
+
+        int wonGames = (int) games.stream()
+                .filter(GameDTO::isWin)
+                .count();
+
+        return (!games.isEmpty()) ? (float) wonGames / games.size() : 0f;
     }
 }

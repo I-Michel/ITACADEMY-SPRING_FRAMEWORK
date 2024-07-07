@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface GameRepository extends MongoRepository<Game, ObjectId> {
+public interface GameRepository extends MongoRepository<Game, String> {
     void deleteAllByPlayerId(int playerId);
     List<Game> findAllByPlayerId(int playerId);
 }

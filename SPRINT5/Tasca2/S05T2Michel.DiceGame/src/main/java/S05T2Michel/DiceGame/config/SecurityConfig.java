@@ -1,7 +1,6 @@
 package S05T2Michel.DiceGame.config;
 
 import S05T2Michel.DiceGame.model.service.impl.PlayerServiceMySQL;
-import S05T2Michel.DiceGame.security.JwtAuthenticationEntryPoint;
 import S05T2Michel.DiceGame.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -31,7 +30,6 @@ public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final PlayerServiceMySQL playerService;
-    private final JwtAuthenticationEntryPoint unauthorizedHandler;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -70,7 +68,7 @@ public class SecurityConfig {
     private RequestMatcher publicEndpoints(){
         return new OrRequestMatcher(
                 new AntPathRequestMatcher("/auth/**"),
-                new AntPathRequestMatcher("/player/**"),
+                new AntPathRequestMatcher("/players/**"),
                 new AntPathRequestMatcher("/swagger"),
                 new AntPathRequestMatcher("/swagger/**"),
                 new AntPathRequestMatcher("/swagger-ui/**"),

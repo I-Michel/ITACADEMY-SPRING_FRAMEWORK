@@ -18,7 +18,7 @@ import java.util.Date;
 @Document(collection = "games")
 public class Game {
     @Id
-    private ObjectId gameId;
+    private String id;
 
     @NotNull
     private int diceRoll1;

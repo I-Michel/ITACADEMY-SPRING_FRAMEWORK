@@ -4,6 +4,7 @@ import S05T2Michel.DiceGame.model.dto.GameDTO;
 import S05T2Michel.DiceGame.model.dto.PlayerDTO;
 import S05T2Michel.DiceGame.model.service.impl.PlayerServiceMySQL;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.v3.oas.annotations.Operation;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,8 +15,13 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -44,28 +50,14 @@ public class PlayerControllerComponentTest {
     }
 
     @Test
-    public void whenAddPlayer_thenStatus201() throws Exception {
-        PlayerDTO dto = new PlayerDTO();
-        dto.setPlayerName("Michel");
-
-        when(playerService.addPlayer(any(PlayerDTO.class))).thenReturn(dto);
-
-        mockMvc.perform(post("/players/")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(dto)))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.playerName").value("Michel"));
-    }
-
-    @Test
     public void whenUpdatePlayerName_thenStatus200() throws Exception {
         PlayerDTO dto = new PlayerDTO();
         dto.setPlayerId(1);
-        dto.setPlayerName("New name");
+        dto.setPlayerName("Old name");
 
-        when(playerService.updatePlayerName(any(PlayerDTO.class))).thenReturn(dto);
+        when(playerService.updatePlayerName(dto.getPlayerId(), "New name")).thenReturn(dto);
 
-        mockMvc.perform(put("/players/")
+        mockMvc.perform(put("/players/update-name/{id}", dto.getPlayerId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(dto)))
                 .andExpect(status().isOk())

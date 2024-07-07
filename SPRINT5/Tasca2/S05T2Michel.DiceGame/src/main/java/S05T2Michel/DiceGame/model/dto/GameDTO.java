@@ -13,7 +13,7 @@ import java.util.Date;
 @Builder
 public class GameDTO {
 
-    private ObjectId gameId;
+    private String id;
     private int diceRoll1;
     private int diceRoll2;
 

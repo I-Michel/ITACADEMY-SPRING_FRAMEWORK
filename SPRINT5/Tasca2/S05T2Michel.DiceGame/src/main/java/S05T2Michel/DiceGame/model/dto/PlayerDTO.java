@@ -8,7 +8,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.util.Date;
-import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -28,15 +27,6 @@ public class PlayerDTO {
 
     private Date registrationDate;
     private Role role;
-    private List<GameDTO> games;
     private float winRate;
 
-    public float calculateWinRate() {
-
-        int wonGames = (int) this.games.stream()
-                .filter(GameDTO::isWin)
-                .count();
-
-        return (!this.games.isEmpty()) ? (float) wonGames / this.games.size() : 0f;
-    }
 }

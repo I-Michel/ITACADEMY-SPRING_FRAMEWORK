@@ -12,9 +12,7 @@ public interface PlayerService {
     Optional<Player> getOptionalPlayer(int id);
     PlayerDTO getOnePlayer(int id);
     List<PlayerDTO> getAllPlayers();
-
-    PlayerDTO updatePlayerName(int id, String newPlayerName);
-
+    PlayerDTO updatePlayerName(int id, String newName);
     PlayerDTO deletePlayer(int id);
     float getAverageWinRate();
     PlayerDTO getBestPlayer();

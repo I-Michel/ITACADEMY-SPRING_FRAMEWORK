@@ -22,20 +22,20 @@ public class GameController {
 
     @Operation(summary = "Add new game by player ID")
     @PostMapping("/{id}/games")
-    public ResponseEntity<GameDTO> addGame(@PathVariable int playerId) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(gameServiceMongoDB.addGame(playerId));
+    public ResponseEntity<GameDTO> addGame(@PathVariable int id) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(gameServiceMongoDB.addGame(id));
     }
 
     @Operation(summary = "Get all games by player ID")
     @GetMapping("/{id}/games")
-    public ResponseEntity<List<GameDTO>> getAllGames(@PathVariable int playerId) {
-        return ResponseEntity.ok(gameServiceMongoDB.getAllGames(playerId));
+    public ResponseEntity<List<GameDTO>> getAllGames(@PathVariable int id) {
+        return ResponseEntity.ok(gameServiceMongoDB.getAllGames(id));
     }
 
     @Operation(summary = "Delete all games by player ID")
     @DeleteMapping("/{id}/games")
-    public ResponseEntity<GameDTO> deleteGames(@PathVariable int playerId) {
-        gameServiceMongoDB.deleteGames(playerId);
+    public ResponseEntity<GameDTO> deleteGames(@PathVariable int id) {
+        gameServiceMongoDB.deleteGames(id);
         return ResponseEntity.noContent().build();
     }
 }

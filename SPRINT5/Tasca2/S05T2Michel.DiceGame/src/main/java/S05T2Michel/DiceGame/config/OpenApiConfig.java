@@ -17,7 +17,7 @@ public class OpenApiConfig {
                 .info(new Info().title("Dice Game API Services")
                         .description("Dice Game related services for IT Academy Final Project")
                         .version("1.0").contact(new Contact().name("I. Michel")
-                                .url("michel.dev2024@gmail.com")
+                                .url("https://github.com/I-Michel")
                                 .email("michel.dev2024@gmail.com")));
     }
 }

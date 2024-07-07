@@ -66,24 +66,6 @@ public class PlayerServiceMySQLUnitTest {
     }
 
     @Test
-    public void whenAddPlayer_thenPlayerShouldBeAdded() {
-        Player player = new Player();
-        player.setPlayerName("Michel");
-
-        PlayerDTO dto = new PlayerDTO();
-        dto.setPlayerName("Michel");
-
-        when(playerMapper.convertToEntity(dto)).thenReturn(player);
-        when(playerRepository.save(player)).thenReturn(player);
-        when(playerMapper.convertToDTO(player)).thenReturn(dto);
-
-        PlayerDTO addedPlayer = playerService.addPlayer(dto);
-
-        assertThat(addedPlayer.getPlayerName()).isEqualTo("Michel");
-        verify(playerRepository, times(1)).save(player);
-    }
-
-    @Test
     public void whenGetOnePlayer_thenPlayerShouldBeReturned() {
         Player player = new Player();
         player.setPlayerId(1);
@@ -114,15 +96,11 @@ public class PlayerServiceMySQLUnitTest {
         player.setPlayerId(1);
         player.setPlayerName("Old Name");
 
-        PlayerDTO playerDTO = new PlayerDTO();
-        playerDTO.setPlayerId(1);
-        playerDTO.setPlayerName("New Name");
-
         when(playerRepository.findById(1)).thenReturn(Optional.of(player));
         when(playerRepository.save(any(Player.class))).thenReturn(player);
-        when(playerMapper.convertToDTO(player)).thenReturn(playerDTO);
+        when(playerMapper.convertToDTO(player)).thenReturn("New name");
 
-        PlayerDTO updatedPlayer = playerService.updatePlayerName(playerDTO);
+        PlayerDTO updatedPlayer = playerService.updatePlayerName();
 
         assertThat(updatedPlayer.getPlayerName()).isEqualTo("New Name");
         verify(playerRepository, times(1)).save(player);
@@ -144,30 +122,6 @@ public class PlayerServiceMySQLUnitTest {
         assertThat(deletedPlayer.getPlayerId()).isEqualTo(11);
         verify(playerRepository, times(1)).deleteById(11);
         verify(gameRepository, times(1)).deleteAllByPlayerId(11);
-    }
-
-    @Test
-    public void whenGetPlayerWinRate_thenReturnWinRate() {
-        Player player = new Player();
-        player.setPlayerId(1);
-
-        PlayerDTO playerDTO = new PlayerDTO();
-        playerDTO.setPlayerId(1);
-
-        GameDTO win = new GameDTO();
-        win.setWin(true);
-        GameDTO lose = new GameDTO();
-        lose.setWin(false);
-
-        List<GameDTO> games = Arrays.asList(win, lose);
-        playerDTO.setGames(games);
-
-        when(playerRepository.findById(1)).thenReturn(Optional.of(player));
-        when(playerMapper.convertToDTO(player)).thenReturn(playerDTO);
-
-        float winRate = playerService.getPlayerWinRate(1);
-
-        assertThat(winRate).isEqualTo(0.5f);
     }
 
     @Test

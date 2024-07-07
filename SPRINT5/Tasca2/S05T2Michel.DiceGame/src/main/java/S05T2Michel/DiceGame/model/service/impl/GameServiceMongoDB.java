@@ -47,9 +47,6 @@ public class GameServiceMongoDB implements GameService {
     public List<GameDTO> getAllGames(int playerId) {
         List<Game> games = gameRepository.findAllByPlayerId(playerId);
 
-        if (games.isEmpty()) {
-            throw new GameNotFoundException("No games found for player with ID: " + playerId);
-        }
         return games.stream()
                 .map(gameMapper::convertToDTO)
                 .collect(Collectors.toList());

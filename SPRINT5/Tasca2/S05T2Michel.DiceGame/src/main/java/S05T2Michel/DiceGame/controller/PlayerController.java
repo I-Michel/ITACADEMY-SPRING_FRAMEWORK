@@ -1,10 +1,8 @@
 package S05T2Michel.DiceGame.controller;
 
-import S05T2Michel.DiceGame.model.dto.GameDTO;
 import S05T2Michel.DiceGame.model.dto.PlayerDTO;
 import S05T2Michel.DiceGame.model.service.impl.PlayerServiceMySQL;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,14 +23,14 @@ public class PlayerController {
 
     @Operation(summary = "Get player details by ID")
     @GetMapping("/get/{id}")
-    public ResponseEntity<PlayerDTO> getOnePlayer(@PathVariable int playerId) {
-        return ResponseEntity.ok(playerServiceMySQL.getOnePlayer(playerId));
+    public ResponseEntity<PlayerDTO> getOnePlayer(@PathVariable int id) {
+        return ResponseEntity.ok(playerServiceMySQL.getOnePlayer(id));
     }
 
     @Operation(summary = "Delete player by ID")
-    @DeleteMapping("/delete/{id}/")
-    public ResponseEntity<PlayerDTO> deletePlayer(@PathVariable int playerId) {
-        playerServiceMySQL.deletePlayer(playerId);
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<PlayerDTO> deletePlayer(@PathVariable int id) {
+        playerServiceMySQL.deletePlayer(id);
         return ResponseEntity.noContent().build();
     }
 
