@@ -1,7 +1,6 @@
 package S05T2Michel.DiceGame.model.service.impl;
 
 import S05T2Michel.DiceGame.model.domain.Player;
-import S05T2Michel.DiceGame.model.dto.GameDTO;
 import S05T2Michel.DiceGame.model.dto.PlayerDTO;
 import S05T2Michel.DiceGame.model.exception.NoPlayersFoundException;
 import S05T2Michel.DiceGame.model.exception.PlayerAlreadyExistsException;

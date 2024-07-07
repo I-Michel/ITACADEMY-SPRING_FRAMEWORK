@@ -27,17 +27,17 @@ public class PlayerController {
         return ResponseEntity.ok(playerServiceMySQL.getOnePlayer(id));
     }
 
+    @Operation(summary = "Get all players details")
+    @GetMapping("/")
+    public ResponseEntity<List<PlayerDTO>> getAllPlayers() {
+        return ResponseEntity.ok(playerServiceMySQL.getAllPlayers());
+    }
+
     @Operation(summary = "Delete player by ID")
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<PlayerDTO> deletePlayer(@PathVariable int id) {
         playerServiceMySQL.deletePlayer(id);
         return ResponseEntity.noContent().build();
-    }
-
-    @Operation(summary = "Get all players details")
-    @GetMapping("/")
-    public ResponseEntity<List<PlayerDTO>> getAllPlayers() {
-        return ResponseEntity.ok(playerServiceMySQL.getAllPlayers());
     }
 
     @Operation(summary = "Get the average win rate of all players")

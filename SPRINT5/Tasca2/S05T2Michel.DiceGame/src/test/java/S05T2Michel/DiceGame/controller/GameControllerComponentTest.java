@@ -3,7 +3,7 @@ package S05T2Michel.DiceGame.controller;
 import S05T2Michel.DiceGame.model.dto.GameDTO;
 import S05T2Michel.DiceGame.model.service.impl.GameServiceMongoDB;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.bson.types.ObjectId;
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,16 +26,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(GameController.class)
 @AutoConfigureMockMvc
+@RequiredArgsConstructor
 public class GameControllerComponentTest {
 
     @Autowired
-    private MockMvc mockMvc;
+    private final MockMvc mockMvc;
 
     @MockBean
-    private GameServiceMongoDB gameService;
+    private final GameServiceMongoDB gameService;
 
     @Autowired
-    private ObjectMapper mapper;
+    private final ObjectMapper mapper;
 
     @BeforeEach
     public void setUp() {
@@ -65,7 +66,7 @@ public class GameControllerComponentTest {
 
         List<GameDTO> games = Arrays.asList(
                 GameDTO.builder()
-                        .gameId(new ObjectId())
+                        .id("1")
                         .diceRoll1(1)
                         .diceRoll2(5)
                         .result(6)
@@ -73,8 +74,8 @@ public class GameControllerComponentTest {
                         .playerId(1)
                         .build(),
 
-                GameDTO.builder().
-                        gameId(new ObjectId())
+                GameDTO.builder()
+                        .id("2")
                         .diceRoll1(3)
                         .diceRoll2(4)
                         .result(7)
@@ -88,10 +89,11 @@ public class GameControllerComponentTest {
         mockMvc.perform(get("/players/{id}/games", 1))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].playerId").value(1))
+                .andExpect(jsonPath("$[0].result").value(6))
                 .andExpect(jsonPath("$[0].win").value(false))
                 .andExpect(jsonPath("$[1].result").value(7))
                 .andExpect(jsonPath("$[1].diceRoll1").value(3))
-                .andExpect(jsonPath("$[2].diceRoll2").value(4));
+                .andExpect(jsonPath("$[1].diceRoll2").value(4));
     }
 
     @Test

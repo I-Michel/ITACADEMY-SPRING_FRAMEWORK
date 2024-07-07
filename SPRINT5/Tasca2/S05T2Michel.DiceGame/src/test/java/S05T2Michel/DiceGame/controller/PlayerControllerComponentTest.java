@@ -5,6 +5,7 @@ import S05T2Michel.DiceGame.model.dto.PlayerDTO;
 import S05T2Michel.DiceGame.model.service.impl.PlayerServiceMySQL;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Operation;
+import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,16 +34,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(PlayerController.class)
 @AutoConfigureMockMvc
+@RequiredArgsConstructor
 public class PlayerControllerComponentTest {
 
     @Autowired
-    private MockMvc mockMvc;
+    private final MockMvc mockMvc;
 
     @MockBean
-    private PlayerServiceMySQL playerService;
+    private final PlayerServiceMySQL playerService;
 
     @Autowired
-    private ObjectMapper mapper;
+    private final ObjectMapper mapper;
 
     @BeforeEach
     public void setUp() {
@@ -66,18 +68,10 @@ public class PlayerControllerComponentTest {
 
     @Test
     public void whenGetOnePlayer_thenStatus200() throws Exception {
-        GameDTO gameDTO = new GameDTO();
-        gameDTO.setGameId(new ObjectId());
-        gameDTO.setDiceRoll1(3);
-        gameDTO.setDiceRoll2(4);
-        gameDTO.setResult(7);
-        gameDTO.setWin(true);
-        gameDTO.setPlayerId(1);
-
         PlayerDTO playerDTO = new PlayerDTO();
         playerDTO.setPlayerId(1);
         playerDTO.setPlayerName("Michel");
-        playerDTO.setGames(Collections.singletonList(gameDTO));
+        playerDTO.setWinRate(5f);
 
         when(playerService.getOnePlayer(1)).thenReturn(playerDTO);
 
@@ -85,40 +79,21 @@ public class PlayerControllerComponentTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.playerId").value(1))
                 .andExpect(jsonPath("$.playerName").value("Michel"))
-                .andExpect(jsonPath("$.games[0].gameId").exists())
-                .andExpect(jsonPath("$.games[0].diceRoll1").value(3))
-                .andExpect(jsonPath("$.games[0].diceRoll2").value(4))
-                .andExpect(jsonPath("$.games[0].result").value(7))
-                .andExpect(jsonPath("$.games[0].win").value(true));
+                .andExpect(jsonPath("$.winRate").value(5f));
     }
 
     @Test
     public void whenGetAllPlayers_thenStatus200() throws Exception {
-        GameDTO gameDTO1 = new GameDTO();
-        gameDTO1.setGameId(new ObjectId());
-        gameDTO1.setDiceRoll1(3);
-        gameDTO1.setDiceRoll2(4);
-        gameDTO1.setResult(7);
-        gameDTO1.setWin(true);
-        gameDTO1.setPlayerId(1);
-
-        GameDTO gameDTO2 = new GameDTO();
-        gameDTO2.setGameId(new ObjectId());
-        gameDTO2.setDiceRoll1(1);
-        gameDTO2.setDiceRoll2(4);
-        gameDTO2.setResult(5);
-        gameDTO2.setWin(false);
-        gameDTO2.setPlayerId(2);
-
         PlayerDTO playerDTO1 = new PlayerDTO();
         playerDTO1.setPlayerId(1);
         playerDTO1.setPlayerName("Michel");
-        playerDTO1.setGames(Collections.singletonList(gameDTO1));
+        playerDTO1.setWinRate(5f);
 
         PlayerDTO playerDTO2 = new PlayerDTO();
         playerDTO2.setPlayerId(2);
         playerDTO2.setPlayerName("Lehcim");
-        playerDTO2.setGames(Collections.singletonList(gameDTO2));
+        playerDTO2.setWinRate(10f);
+
 
         List<PlayerDTO> players = Arrays.asList(playerDTO1, playerDTO2);
 
@@ -128,27 +103,23 @@ public class PlayerControllerComponentTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].playerId").value(1))
                 .andExpect(jsonPath("$[0].playerName").value("Michel"))
-                .andExpect(jsonPath("$[0].games[0].gameId").exists())
-                .andExpect(jsonPath("$[0].games[0].diceRoll1").value(3))
-                .andExpect(jsonPath("$[0].games[0].win").value(true))
+                .andExpect(jsonPath("$[0].winRate").value(5f))
                 .andExpect(jsonPath("$[1].playerId").value(2))
                 .andExpect(jsonPath("$[1].playerName").value("Lehcim"))
-                .andExpect(jsonPath("$[1].games[0].gameId").exists())
-                .andExpect(jsonPath("$[1].games[0].diceRoll1").value(2))
-                .andExpect(jsonPath("$[1].games[0].result").value(5));
+                .andExpect(jsonPath("$[1].winRate").value(10f));
     }
 
     @Test
     public void whenGetAverageWinRate_thenReturnAverageWinRate() throws Exception {
-        float winRate = 0.5f;
 
-        when(playerService.getAverageWinRate()).thenReturn(winRate);
+
+        when(playerService.getAverageWinRate()).thenReturn(0.5f);
 
         mockMvc.perform(get("/players/winrate")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$").value(winRate));
+                .andExpect(jsonPath("$").value(0.5f));
     }
 
     @Test

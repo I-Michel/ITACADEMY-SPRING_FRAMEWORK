@@ -2,7 +2,6 @@ package S05T2Michel.DiceGame.repository;
 
 import S05T2Michel.DiceGame.model.domain.Game;
 import S05T2Michel.DiceGame.model.repository.mongodb.GameRepository;
-import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.AutoConfigureDataMongo;
@@ -22,8 +21,8 @@ public class GameRepositoryIntegrationTest {
 
     @Test
     public void whenDeleteAllByPlayerId_thenDeleteAllPlayerGames() {
-        Game game1 = new Game(new ObjectId(), 3, 4, new Date(), 1);
-        Game game2 = new Game(new ObjectId(), 1, 2, new Date(), 1);
+        Game game1 = new Game("1", 3, 4, new Date(), 1);
+        Game game2 = new Game("1", 1, 2, new Date(), 1);
         gameRepository.save(game1);
         gameRepository.save(game2);
 
@@ -36,8 +35,8 @@ public class GameRepositoryIntegrationTest {
     @Test
     public void whenFindAllByPlayerId_thenReturnGames() {
 
-        gameRepository.save(new Game(new ObjectId(), 3, 4, new Date(), 1));
-        gameRepository.save(new Game(new ObjectId(), 1, 2, new Date(), 1));
+        gameRepository.save(new Game("1", 3, 4, new Date(), 1));
+        gameRepository.save(new Game("2", 1, 2, new Date(), 1));
 
         List<Game> games = gameRepository.findAllByPlayerId(1);
 

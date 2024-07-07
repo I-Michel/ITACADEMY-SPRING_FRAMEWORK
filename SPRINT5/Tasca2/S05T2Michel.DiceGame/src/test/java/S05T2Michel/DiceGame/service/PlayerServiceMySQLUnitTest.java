@@ -16,11 +16,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -69,16 +72,16 @@ public class PlayerServiceMySQLUnitTest {
     public void whenGetOnePlayer_thenPlayerShouldBeReturned() {
         Player player = new Player();
         player.setPlayerId(1);
-
-        PlayerDTO dto = new PlayerDTO();
-        dto.setPlayerId(1);
+        PlayerDTO dto = playerMapper.convertToDTO(player);
 
         when(playerRepository.findById(1)).thenReturn(Optional.of(player));
-        when(playerMapper.convertToDTO(player)).thenReturn(dto);
 
-        PlayerDTO foundPlayer = playerService.getOnePlayer(1);
+        PlayerDTO expectedDto = new PlayerDTO();
+        expectedDto.setPlayerId(1);
 
-        assertThat(foundPlayer.getPlayerId()).isEqualTo(1);
+        when(playerMapper.convertToDTO(player)).thenReturn(expectedDto);
+
+        assertThat(dto).isEqualTo(expectedDto);
     }
 
     @Test
@@ -96,14 +99,20 @@ public class PlayerServiceMySQLUnitTest {
         player.setPlayerId(1);
         player.setPlayerName("Old Name");
 
+        PlayerDTO dto = new PlayerDTO();
+        dto.setPlayerId(1);
+        dto.setPlayerName("Old Name");
+
         when(playerRepository.findById(1)).thenReturn(Optional.of(player));
         when(playerRepository.save(any(Player.class))).thenReturn(player);
-        when(playerMapper.convertToDTO(player)).thenReturn("New name");
+        when(playerMapper.convertToDTO(any(Player.class))).thenReturn(dto);
 
-        PlayerDTO updatedPlayer = playerService.updatePlayerName();
+        PlayerDTO updatedPlayer = playerService.updatePlayerName(1, "New Name");
 
         assertThat(updatedPlayer.getPlayerName()).isEqualTo("New Name");
+        verify(playerRepository, times(1)).findById(1);
         verify(playerRepository, times(1)).save(player);
+        verify(playerMapper, times(1)).convertToDTO(player);
     }
 
     @Test
