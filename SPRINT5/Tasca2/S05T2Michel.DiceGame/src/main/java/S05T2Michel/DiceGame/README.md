@@ -9,7 +9,6 @@ _(Spring Java & Spring Framework bootcamp)_
 <details open>
 <summary>Open and copy! Ready to import & consume: </summary>
 <br>
----
 <pre>{
 	"info": {
 		"_postman_id": "3b97b8e4-b3f4-4636-8d1c-85ebc39c0b97",
