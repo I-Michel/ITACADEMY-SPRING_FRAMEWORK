@@ -3,7 +3,6 @@ package S05T2Michel.DiceGame.model.service;
 import S05T2Michel.DiceGame.model.dto.PlayerDTO;
 import S05T2Michel.DiceGame.model.domain.Player;
 import org.springframework.security.core.userdetails.UserDetailsService;
-
 import java.util.List;
 import java.util.Optional;
 

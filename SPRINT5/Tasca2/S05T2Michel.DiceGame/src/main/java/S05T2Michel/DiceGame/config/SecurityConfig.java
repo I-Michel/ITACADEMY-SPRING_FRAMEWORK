@@ -1,10 +1,11 @@
 package S05T2Michel.DiceGame.config;
 
-import S05T2Michel.DiceGame.model.service.impl.PlayerServiceMySQL;
+import S05T2Michel.DiceGame.model.service.impl.PlayerServiceMySQLImpl;
 import S05T2Michel.DiceGame.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -29,7 +30,7 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
-    private final PlayerServiceMySQL playerService;
+    private final PlayerServiceMySQLImpl playerService;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -37,7 +38,9 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(publicEndpoints()).permitAll()
-                        .requestMatchers("/players/delete/**").hasRole("ADMIN")
+                        .requestMatchers(userEndpoints()).hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/players/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/players/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -68,7 +71,6 @@ public class SecurityConfig {
     private RequestMatcher publicEndpoints(){
         return new OrRequestMatcher(
                 new AntPathRequestMatcher("/auth/**"),
-                new AntPathRequestMatcher("/players/**"),
                 new AntPathRequestMatcher("/swagger"),
                 new AntPathRequestMatcher("/swagger/**"),
                 new AntPathRequestMatcher("/swagger-ui/**"),
@@ -76,6 +78,14 @@ public class SecurityConfig {
                 new AntPathRequestMatcher("/swaggerDiceGame"),
                 new AntPathRequestMatcher("/v3/api-docs/**"),
                 new AntPathRequestMatcher("/error")
+        );
+    }
+
+    private RequestMatcher userEndpoints(){
+        return new OrRequestMatcher(
+                new AntPathRequestMatcher("/players/"),
+                new AntPathRequestMatcher("/players/**", HttpMethod.GET.toString()),
+                new AntPathRequestMatcher("/players/**", HttpMethod.POST.toString())
         );
     }
 }

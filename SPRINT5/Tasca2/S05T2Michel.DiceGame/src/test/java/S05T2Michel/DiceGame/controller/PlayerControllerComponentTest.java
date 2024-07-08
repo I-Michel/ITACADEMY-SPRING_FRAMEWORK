@@ -1,7 +1,7 @@
 package S05T2Michel.DiceGame.controller;
 
 import S05T2Michel.DiceGame.model.dto.PlayerDTO;
-import S05T2Michel.DiceGame.model.service.impl.PlayerServiceMySQL;
+import S05T2Michel.DiceGame.model.service.impl.PlayerServiceMySQLImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,7 +28,7 @@ public class PlayerControllerComponentTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private PlayerServiceMySQL playerService;
+    private PlayerServiceMySQLImpl playerService;
 
     @Autowired
     private ObjectMapper mapper;

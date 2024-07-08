@@ -2,12 +2,11 @@ package S05T2Michel.DiceGame.model.service.impl;
 
 import S05T2Michel.DiceGame.model.dto.GameDTO;
 import S05T2Michel.DiceGame.model.domain.Game;
-import S05T2Michel.DiceGame.model.exception.GameNotFoundException;
+import S05T2Michel.DiceGame.model.exception.NoGamesFoundException;
 import S05T2Michel.DiceGame.model.mapper.GameMapper;
 import S05T2Michel.DiceGame.model.repository.mongodb.GameRepository;
 import S05T2Michel.DiceGame.model.service.GameService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Random;
@@ -15,12 +14,10 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class GameServiceMongoDB implements GameService {
+public class GameServiceMongoDBImpl implements GameService {
 
-    @Autowired
     private final GameRepository gameRepository;
 
-    @Autowired
     private final GameMapper gameMapper;
 
     @Override
@@ -44,8 +41,12 @@ public class GameServiceMongoDB implements GameService {
     }
 
     @Override
-    public List<GameDTO> getAllGames(int playerId) {
+    public List<GameDTO> getAllGames(int playerId, boolean throwIfEmpty) {
         List<Game> games = gameRepository.findAllByPlayerId(playerId);
+
+        if (games.isEmpty() && throwIfEmpty) {
+            throw new NoGamesFoundException("No games found: player with ID " + playerId + " has no games yet");
+        }
 
         return games.stream()
                 .map(gameMapper::convertToDTO)
@@ -57,8 +58,9 @@ public class GameServiceMongoDB implements GameService {
         List<Game> games = gameRepository.findAllByPlayerId(playerId);
 
         if (games.isEmpty()) {
-            throw new GameNotFoundException("No games found to delete for player with ID: " + playerId);
+            throw new NoGamesFoundException("No games found to delete for player with ID: " + playerId);
         }
+
         gameRepository.deleteAllByPlayerId(playerId);
     }
 }

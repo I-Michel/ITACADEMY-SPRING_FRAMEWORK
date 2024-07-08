@@ -7,7 +7,7 @@ import S05T2Michel.DiceGame.model.exception.PlayerNotFoundException;
 import S05T2Michel.DiceGame.model.mapper.PlayerMapper;
 import S05T2Michel.DiceGame.model.repository.mongodb.GameRepository;
 import S05T2Michel.DiceGame.model.repository.mysql.PlayerRepository;
-import S05T2Michel.DiceGame.model.service.impl.PlayerServiceMySQL;
+import S05T2Michel.DiceGame.model.service.impl.PlayerServiceMySQLImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,7 +23,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class PlayerServiceMySQLUnitTest {
+public class PlayerServiceMySQLImplUnitTest {
 
     @Mock
     private PlayerRepository playerRepository;
@@ -35,7 +35,7 @@ public class PlayerServiceMySQLUnitTest {
     private PlayerMapper playerMapper;
 
     @InjectMocks
-    private PlayerServiceMySQL playerService;
+    private PlayerServiceMySQLImpl playerService;
 
     @BeforeEach
     public void setUp() {

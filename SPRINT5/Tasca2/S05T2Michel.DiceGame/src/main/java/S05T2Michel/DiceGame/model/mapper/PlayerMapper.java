@@ -3,21 +3,16 @@ package S05T2Michel.DiceGame.model.mapper;
 import S05T2Michel.DiceGame.model.domain.Player;
 import S05T2Michel.DiceGame.model.dto.GameDTO;
 import S05T2Michel.DiceGame.model.dto.PlayerDTO;
-import S05T2Michel.DiceGame.model.service.impl.GameServiceMongoDB;
-import S05T2Michel.DiceGame.model.service.impl.PlayerServiceMySQL;
+import S05T2Michel.DiceGame.model.service.impl.GameServiceMongoDBImpl;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
-
 import java.util.List;
 
 @Component
 @RequiredArgsConstructor
 public class PlayerMapper {
 
-    @Autowired
-    private final GameServiceMongoDB gameService;
+    private final GameServiceMongoDBImpl gameService;
 
     public PlayerDTO convertToDTO(Player player) {
         PlayerDTO dto = PlayerDTO.builder()
@@ -43,12 +38,11 @@ public class PlayerMapper {
     }
 
     public float getPlayerWinRate(int id) {
-        List<GameDTO> games = gameService.getAllGames(id);
+        List<GameDTO> games = gameService.getAllGames(id, false);
 
-        int wonGames = (int) games.stream()
-                .filter(GameDTO::isWin)
-                .count();
-
-        return (!games.isEmpty()) ? (float) wonGames / games.size() : 0f;
+        return games.isEmpty() ? 0 :
+                (float) games.stream()
+                        .filter(GameDTO::isWin)
+                        .count() / games.size();
     }
 }

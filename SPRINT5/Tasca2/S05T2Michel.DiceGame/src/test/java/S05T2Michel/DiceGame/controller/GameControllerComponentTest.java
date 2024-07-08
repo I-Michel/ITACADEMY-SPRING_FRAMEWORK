@@ -1,7 +1,7 @@
 package S05T2Michel.DiceGame.controller;
 
 import S05T2Michel.DiceGame.model.dto.GameDTO;
-import S05T2Michel.DiceGame.model.service.impl.GameServiceMongoDB;
+import S05T2Michel.DiceGame.model.service.impl.GameServiceMongoDBImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,7 +33,7 @@ public class GameControllerComponentTest {
     private final MockMvc mockMvc;
 
     @MockBean
-    private final GameServiceMongoDB gameService;
+    private final GameServiceMongoDBImpl gameService;
 
     @Autowired
     private final ObjectMapper mapper;

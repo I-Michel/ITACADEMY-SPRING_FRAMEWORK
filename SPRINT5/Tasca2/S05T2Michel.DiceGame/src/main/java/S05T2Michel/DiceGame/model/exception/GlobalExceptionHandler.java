@@ -32,18 +32,17 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorDetails, HttpStatus.CONFLICT);
     }
 
-    @ExceptionHandler(GameNotFoundException.class)
-    public ResponseEntity<ErrorDetails> handleGameNotFoundException(GameNotFoundException ex, WebRequest request) {
+    @ExceptionHandler(NoPlayersFoundException.class)
+    public ResponseEntity<ErrorDetails> handleNoPlayersFoundException(NoPlayersFoundException ex, WebRequest request) {
         ErrorDetails errorDetails = new ErrorDetails(
                 HttpStatus.NOT_FOUND.value(),
                 ex.getMessage(),
                 request.getDescription(false));
-
         return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(NoPlayersFoundException.class)
-    public ResponseEntity<ErrorDetails> handleNoPlayersFoundException(NoPlayersFoundException ex, WebRequest request) {
+    @ExceptionHandler(NoGamesFoundException.class)
+    public ResponseEntity<ErrorDetails> handleNoGamesFoundException(NoGamesFoundException ex, WebRequest request) {
         ErrorDetails errorDetails = new ErrorDetails(
                 HttpStatus.NOT_FOUND.value(),
                 ex.getMessage(),

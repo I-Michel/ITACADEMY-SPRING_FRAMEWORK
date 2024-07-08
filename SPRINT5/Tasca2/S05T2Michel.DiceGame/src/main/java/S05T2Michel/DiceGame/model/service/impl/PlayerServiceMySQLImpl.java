@@ -11,7 +11,6 @@ import S05T2Michel.DiceGame.model.repository.mysql.PlayerRepository;
 import S05T2Michel.DiceGame.model.service.PlayerService;
 import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -24,24 +23,25 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class PlayerServiceMySQL implements PlayerService {
+public class PlayerServiceMySQLImpl implements PlayerService {
 
-    @Autowired
     private final PlayerRepository playerRepository;
 
-    @Autowired
     private final GameRepository gameRepository;
 
-    @Autowired
     private final PlayerMapper playerMapper;
 
     @Override
     public String validatePlayerName(String playerName) {
         if (StringUtils.isBlank(playerName) || playerName.equalsIgnoreCase("UNKNOWN")) {
-            playerName = "UNKNOWN";
-        } else if (playerRepository.existsByPlayerNameIgnoreCase(playerName)) {
-            throw new PlayerAlreadyExistsException(playerName);
+            return "UNKNOWN";
         }
+
+        playerRepository.findPlayerByPlayerNameIgnoreCase(playerName)
+                .ifPresent(player -> {
+                    throw new PlayerAlreadyExistsException(playerName);
+                });
+
         return playerName;
     }
 
@@ -52,15 +52,21 @@ public class PlayerServiceMySQL implements PlayerService {
 
     @Override
     public PlayerDTO getOnePlayer(int playerId) {
-        Optional<Player> optionalPlayer = getOptionalPlayer(playerId);
+        Player player = getOptionalPlayer(playerId).orElseThrow(() -> new PlayerNotFoundException(playerId));
 
-        return playerMapper.convertToDTO(optionalPlayer.orElseThrow(() -> new PlayerNotFoundException(playerId)));
+        if ("ADMIN".equalsIgnoreCase(player.getRole().toString())) {
+            throw new PlayerNotFoundException(playerId);
+        }
+
+        return playerMapper.convertToDTO(player);
     }
 
     @Override
     public List<PlayerDTO> getAllPlayers() {
         List<Player> players = playerRepository.findAll();
+
         return players.stream()
+                .filter(player -> !("ADMIN".equalsIgnoreCase(player.getRole().toString())))
                 .map(playerMapper::convertToDTO)
                 .collect(Collectors.toList());
     }
@@ -124,7 +130,7 @@ public class PlayerServiceMySQL implements PlayerService {
         return new UserDetailsService() {
             @Override
             public UserDetails loadUserByUsername(String playerName) {
-                return playerRepository.findPlayerByPlayerName(playerName)
+                return playerRepository.findPlayerByPlayerNameIgnoreCase(playerName)
                         .orElseThrow(() -> new UsernameNotFoundException("Player not found with name: " + playerName));
             }
         };

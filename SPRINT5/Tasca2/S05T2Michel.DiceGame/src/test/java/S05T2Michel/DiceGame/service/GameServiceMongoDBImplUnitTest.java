@@ -2,12 +2,10 @@ package S05T2Michel.DiceGame.service;
 
 import S05T2Michel.DiceGame.model.domain.Game;
 import S05T2Michel.DiceGame.model.dto.GameDTO;
-import S05T2Michel.DiceGame.model.exception.GameNotFoundException;
 import S05T2Michel.DiceGame.model.mapper.GameMapper;
 import S05T2Michel.DiceGame.model.repository.mongodb.GameRepository;
-import S05T2Michel.DiceGame.model.service.impl.GameServiceMongoDB;
+import S05T2Michel.DiceGame.model.service.impl.GameServiceMongoDBImpl;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -21,7 +19,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class GameServiceMongoDBUnitTest {
+public class GameServiceMongoDBImplUnitTest {
 
     @Mock
     private GameRepository gameRepository;
@@ -30,7 +28,7 @@ public class GameServiceMongoDBUnitTest {
     private GameMapper gameMapper;
 
     @InjectMocks
-    private GameServiceMongoDB gameService;
+    private GameServiceMongoDBImpl gameService;
 
     @BeforeEach
     public void setUp() {

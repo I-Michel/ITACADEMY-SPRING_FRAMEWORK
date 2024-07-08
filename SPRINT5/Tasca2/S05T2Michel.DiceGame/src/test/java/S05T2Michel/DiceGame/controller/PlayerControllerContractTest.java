@@ -1,7 +1,7 @@
 package S05T2Michel.DiceGame.controller;
 
 import S05T2Michel.DiceGame.model.dto.PlayerDTO;
-import S05T2Michel.DiceGame.model.service.impl.PlayerServiceMySQL;
+import S05T2Michel.DiceGame.model.service.impl.PlayerServiceMySQLImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -22,7 +22,7 @@ public class PlayerControllerContractTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private PlayerServiceMySQL playerService;
+    private PlayerServiceMySQLImpl playerService;
 
     @Test
     public void whenGetAverageWinRate_thenReturnsWinRate() throws Exception {

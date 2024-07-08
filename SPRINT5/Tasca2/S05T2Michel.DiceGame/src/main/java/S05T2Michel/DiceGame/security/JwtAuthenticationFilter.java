@@ -1,7 +1,7 @@
 package S05T2Michel.DiceGame.security;
 
 import S05T2Michel.DiceGame.model.service.impl.JwtServiceImpl;
-import S05T2Michel.DiceGame.model.service.impl.PlayerServiceMySQL;
+import S05T2Michel.DiceGame.model.service.impl.PlayerServiceMySQLImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,7 +27,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Autowired
     @Lazy
-    private final PlayerServiceMySQL playerService;
+    private final PlayerServiceMySQLImpl playerService;
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,

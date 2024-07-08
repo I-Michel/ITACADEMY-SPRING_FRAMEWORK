@@ -2,7 +2,7 @@ package S05T2Michel.DiceGame.controller;
 
 
 import S05T2Michel.DiceGame.model.dto.GameDTO;
-import S05T2Michel.DiceGame.model.service.impl.GameServiceMongoDB;
+import S05T2Michel.DiceGame.model.service.impl.GameServiceMongoDBImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,24 +18,25 @@ import java.util.List;
 public class GameController {
 
     @Autowired
-    private final GameServiceMongoDB gameServiceMongoDB;
+    private final GameServiceMongoDBImpl gameServiceMongoDBImpl;
 
     @Operation(summary = "Add new game by player ID")
     @PostMapping("/{id}/games")
     public ResponseEntity<GameDTO> addGame(@PathVariable int id) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(gameServiceMongoDB.addGame(id));
+        return ResponseEntity.status(HttpStatus.CREATED).body(gameServiceMongoDBImpl.addGame(id));
     }
 
     @Operation(summary = "Get all games by player ID")
     @GetMapping("/{id}/games")
     public ResponseEntity<List<GameDTO>> getAllGames(@PathVariable int id) {
-        return ResponseEntity.ok(gameServiceMongoDB.getAllGames(id));
+        return ResponseEntity.ok(gameServiceMongoDBImpl.getAllGames(id, true));
     }
 
     @Operation(summary = "Delete all games by player ID")
     @DeleteMapping("/{id}/games")
-    public ResponseEntity<GameDTO> deleteGames(@PathVariable int id) {
-        gameServiceMongoDB.deleteGames(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<String> deleteGames(@PathVariable int id) {
+        gameServiceMongoDBImpl.deleteGames(id);
+
+        return ResponseEntity.ok("Games deleted successfully for player with ID:" + id);
     }
 }
