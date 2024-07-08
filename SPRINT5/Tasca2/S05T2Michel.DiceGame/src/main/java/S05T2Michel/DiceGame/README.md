@@ -2,7 +2,7 @@
 
 Dice Game related services for IT Academy Final Project
 
-_(Spring Java & Spring Framework bootcamp)_
+_(Java & Spring Framework bootcamp)_
 
 ## Postman collection
 
